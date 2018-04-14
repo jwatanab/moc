@@ -12,6 +12,7 @@ export default class Main extends React.Component {
         // Init Image Front
         Array.from(document.querySelectorAll('.image'))
             .map(i => {
+                console.log('start')
                 request.post('/main_init')
                     .responseType('arraybuffer')
                     .query({ name: i.id })
@@ -77,16 +78,18 @@ export default class Main extends React.Component {
         return (
             // DOM依存状態を抜け出すために兄弟や親として指定しないこと
             <main className="main_container">
-                <div className="image_content">
-                    <img className="image" id="./node.jpg"></img>
-                </div>
                 <div className="audio_content">
                     <div className="content_bar">
-                        <i className="fa fa-play-circle" aria-hidden="true" id="three"></i>
-                        <audio className="my_audio">
-                            <source className="notificationTone" />
-                        </audio>
-                        <span className="content_name">Test</span>
+                        <div className="img_content">
+                            <img className="image" id="./node.jpg"></img>
+                        </div>
+                        <div className="description_content">
+                            <i className="fa fa-play-circle" aria-hidden="true" id="three"></i>
+                            <audio className="my_audio">
+                                <source className="notificationTone" />
+                            </audio>
+                            <span className="content_name">Test - list</span>
+                        </div>
                     </div>
                 </div>
             </main>

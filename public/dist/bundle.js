@@ -56,20 +56,39 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _componentHeaderJs = __webpack_require__(159);
+	var _componentHeader = __webpack_require__(159);
 
-	var _componentHeaderJs2 = _interopRequireDefault(_componentHeaderJs);
+	var _componentHeader2 = _interopRequireDefault(_componentHeader);
 
-	var _containerMainJs = __webpack_require__(160);
+	var _containerMain = __webpack_require__(160);
 
-	var _containerMainJs2 = _interopRequireDefault(_containerMainJs);
+	var _containerMain2 = _interopRequireDefault(_containerMain);
 
 	addEventListener('load', function () {
 	    return _reactDom2['default'].render(_react2['default'].createElement(
 	        'div',
 	        null,
-	        _react2['default'].createElement(_componentHeaderJs2['default'], null),
-	        _react2['default'].createElement(_containerMainJs2['default'], null)
+	        _react2['default'].createElement(
+	            ReactSlider,
+	            { withBars: true },
+	            _react2['default'].createElement(
+	                'div',
+	                { className: 'my-handle' },
+	                '1'
+	            ),
+	            _react2['default'].createElement(
+	                'div',
+	                { className: 'my-handle' },
+	                '2'
+	            ),
+	            _react2['default'].createElement(
+	                'div',
+	                { className: 'my-handle' },
+	                '3'
+	            )
+	        ),
+	        _react2['default'].createElement(_componentHeader2['default'], null),
+	        _react2['default'].createElement(_containerMain2['default'], null)
 	    ), document.querySelector('#root'));
 	});
 
@@ -19875,6 +19894,7 @@
 
 	            // Init Image Front
 	            Array.from(document.querySelectorAll('.image')).map(function (i) {
+	                console.log('start');
 	                _superagent2['default'].post('/main_init').responseType('arraybuffer').query({ name: i.id }).send(null).end(function (err, res) {
 	                    _assert2['default'].ifError(err);
 	                    var blob = new Blob([res.body], { type: 'image/png' });
@@ -19937,25 +19957,29 @@
 	                    { className: 'main_container' },
 	                    _react2['default'].createElement(
 	                        'div',
-	                        { className: 'image_content' },
-	                        _react2['default'].createElement('img', { className: 'image', id: './node.jpg' })
-	                    ),
-	                    _react2['default'].createElement(
-	                        'div',
 	                        { className: 'audio_content' },
 	                        _react2['default'].createElement(
 	                            'div',
 	                            { className: 'content_bar' },
-	                            _react2['default'].createElement('i', { className: 'fa fa-play-circle', 'aria-hidden': 'true', id: 'three' }),
 	                            _react2['default'].createElement(
-	                                'audio',
-	                                { className: 'my_audio' },
-	                                _react2['default'].createElement('source', { className: 'notificationTone' })
+	                                'div',
+	                                { className: 'img_content' },
+	                                _react2['default'].createElement('img', { className: 'image', id: './node.jpg' })
 	                            ),
 	                            _react2['default'].createElement(
-	                                'span',
-	                                { className: 'content_name' },
-	                                'Test'
+	                                'div',
+	                                { className: 'description_content' },
+	                                _react2['default'].createElement('i', { className: 'fa fa-play-circle', 'aria-hidden': 'true', id: 'three' }),
+	                                _react2['default'].createElement(
+	                                    'audio',
+	                                    { className: 'my_audio' },
+	                                    _react2['default'].createElement('source', { className: 'notificationTone' })
+	                                ),
+	                                _react2['default'].createElement(
+	                                    'span',
+	                                    { className: 'content_name' },
+	                                    'Test - list'
+	                                )
 	                            )
 	                        )
 	                    )
