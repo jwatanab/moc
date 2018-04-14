@@ -19930,30 +19930,33 @@
 	    }, {
 	        key: 'render',
 	        value: function render() {
-	            return _react2['default'].createElement(
-	                'main',
-	                { className: 'main_container' },
+	            return(
+	                // DOM依存状態を抜け出すために兄弟や親として指定しないこと
 	                _react2['default'].createElement(
-	                    'div',
-	                    { className: 'image_content' },
-	                    _react2['default'].createElement('img', { className: 'image', id: './node.jpg' })
-	                ),
-	                _react2['default'].createElement(
-	                    'div',
-	                    { className: 'audio_content' },
+	                    'main',
+	                    { className: 'main_container' },
 	                    _react2['default'].createElement(
 	                        'div',
-	                        { className: 'content_bar' },
-	                        _react2['default'].createElement('i', { className: 'fa fa-play-circle', 'aria-hidden': 'true', id: 'three' }),
+	                        { className: 'image_content' },
+	                        _react2['default'].createElement('img', { className: 'image', id: './node.jpg' })
+	                    ),
+	                    _react2['default'].createElement(
+	                        'div',
+	                        { className: 'audio_content' },
 	                        _react2['default'].createElement(
-	                            'audio',
-	                            { className: 'my_audio' },
-	                            _react2['default'].createElement('source', { className: 'notificationTone' })
-	                        ),
-	                        _react2['default'].createElement(
-	                            'span',
-	                            { className: 'content_name' },
-	                            'Test'
+	                            'div',
+	                            { className: 'content_bar' },
+	                            _react2['default'].createElement('i', { className: 'fa fa-play-circle', 'aria-hidden': 'true', id: 'three' }),
+	                            _react2['default'].createElement(
+	                                'audio',
+	                                { className: 'my_audio' },
+	                                _react2['default'].createElement('source', { className: 'notificationTone' })
+	                            ),
+	                            _react2['default'].createElement(
+	                                'span',
+	                                { className: 'content_name' },
+	                                'Test'
+	                            )
 	                        )
 	                    )
 	                )
