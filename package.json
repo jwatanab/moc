@@ -19,6 +19,7 @@
         "nodemon": "^1.17.2",
         "prop-types": "^15.6.1",
         "react": "^0.14.2",
+        "react-addons-css-transition-group": "^15.6.2",
         "react-addons-transition-group": "^15.6.2",
         "react-addons-update": "^0.14.2",
         "react-dom": "^0.14.2",

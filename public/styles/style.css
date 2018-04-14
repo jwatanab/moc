@@ -104,4 +104,23 @@ max-height: 250px;
   margin: 0 auto;
 }
 
+/**
+ * テスト 
+ */
+ .container {
+  position: relative;
+}
+
+.slide-enter {
+    position: absolute;
+    width: 100%;
+    transform: translateX(100%);
+}
+
+.slide-leave {
+    position: absolute;
+    width: 100%;
+    transform: translateX(0%);
+}
+
 }

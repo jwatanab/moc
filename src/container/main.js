@@ -3,23 +3,13 @@ import assert from 'assert'
 import request from 'superagent'
 import ReactSlider from 'react-slider'
 import CSSTransitionGroup from 'react-addons-transition-group'
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
+
 
 export default class Main extends React.Component {
     constructor(props) {
         super(props)
-        this.state = { isShown: true }
-    }
-
-    // 
-    handleClick() {
-        this.setState({ isShown: !this.state.isShown })
-    }
-
-    //
-    SlideBox() {
-        return (
-            <div id="box" key="key">{this.props.text}</div>
-        )
+        this.state = { isShown: false }
     }
 
     componentDidMount() {
@@ -90,7 +80,6 @@ export default class Main extends React.Component {
     }
 
     render() {
-        let btnText = this.state.isShown ? 'hide' : 'show'
         let component = this.state.isShown ? this.SlideBox() : ''
         return (
             // DOM依存状態を抜け出すために兄弟や親として指定しないこと
@@ -100,7 +89,21 @@ export default class Main extends React.Component {
                         <div className="img_content">
                             <img className="image" id="./node.jpg"></img>
                         </div>
-                        <CSSTransitionGroup />
+                        {
+                            // テストグループ
+                        }
+
+
+                        <ReactCSSTransitionGroup
+                            transitionName="slide"
+                            transitionEnterTimeout={500}
+                            transitionLeaveTimeout={300}
+                        >
+
+                        </ReactCSSTransitionGroup>
+                        {
+                            // テストグループ
+                        }
                         <div className="description_content">
                             <i className="fa fa-play-circle" aria-hidden="true" id="three"></i>
                             <audio className="my_audio">
