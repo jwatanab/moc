@@ -1,11 +1,25 @@
 import React from 'react'
 import assert from 'assert'
 import request from 'superagent'
+import ReactSlider from 'react-slider'
+import CSSTransitionGroup from 'react-addons-transition-group'
 
 export default class Main extends React.Component {
     constructor(props) {
         super(props)
-        this.state = {}
+        this.state = { isShown: true }
+    }
+
+    // 
+    handleClick() {
+        this.setState({ isShown: !this.state.isShown })
+    }
+
+    //
+    SlideBox() {
+        return (
+            <div id="box" key="key">{this.props.text}</div>
+        )
     }
 
     componentDidMount() {
@@ -64,6 +78,7 @@ export default class Main extends React.Component {
             })
     }
 
+    //
     setBuffer(e, n) {
         const nid = n.id
         const blob = new Blob([e], { type: 'audio/mpeg3' })
@@ -75,6 +90,8 @@ export default class Main extends React.Component {
     }
 
     render() {
+        let btnText = this.state.isShown ? 'hide' : 'show'
+        let component = this.state.isShown ? this.SlideBox() : ''
         return (
             // DOM依存状態を抜け出すために兄弟や親として指定しないこと
             <main className="main_container">
@@ -83,6 +100,7 @@ export default class Main extends React.Component {
                         <div className="img_content">
                             <img className="image" id="./node.jpg"></img>
                         </div>
+                        <CSSTransitionGroup />
                         <div className="description_content">
                             <i className="fa fa-play-circle" aria-hidden="true" id="three"></i>
                             <audio className="my_audio">
