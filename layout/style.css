@@ -1,0 +1,104 @@
+html, body {
+    color: #636b6f;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 200;
+    height: 100vh;
+    margin: 0;
+}
+  
+a {
+  color: rgb(0, 0, 0);
+  text-decoration: none;
+  transition: .3s;
+}
+  
+a:hover {
+  background-color: rgb(122, 122, 169);
+}
+  
+.header_title {
+  font-size: 1.8em;
+}
+  
+.container, header, nav, main, footer {
+  padding: 50px 50px 20px;
+}
+  
+.main_container .audio_content .content_bar {
+  width: 80%;
+  font-size: 1.4em;
+  padding: 0 24px;
+  border-radius: 2px;
+  box-shadow: 2px 3px 6px 2px gray;
+}
+  
+.main_container .audio_content .fas {
+  display: inherit;
+}
+  
+.main_container .audio_content .content_name {
+  padding: 12px 5px;
+  max-width: 20px;
+  overflow: hidden;
+}
+
+.content_bar .img_content {
+}
+
+.img_content .img {
+  /* max-width: 250px; */
+  display: block;
+  margin: 0 auto;
+  max-height: 250px;
+}
+
+@media screen and (max-width: 480px){
+
+  /**
+   * コンテンツ親
+   */
+  .main_container .audio_content .content_bar {
+    width: 80%;
+    font-size: 1.4em;
+    padding: 0 24px;
+    border-radius: 2px;
+    box-shadow: none;
+  }
+
+  /**
+   *
+   */
+  .main_container .audio_content .content_bar:hover {
+    opacity: 0.8;
+    transition: .3s;
+  }
+
+  /**
+   * 画像
+   */
+  .img_content .img {
+    max-height: 250px;    
+    max-width: 300px;
+    display: block;
+    margin: 0 auto;
+    border-radius: 10px;
+    box-shadow: 1px 1px 2px  #dee7ec;
+  }
+
+  /**
+   * 曲名
+   */
+  .main_container .audio_content .description_content {
+    padding: 22px 5px;
+    overflow: hidden;
+    display: block;
+
+    margin: 0 auto;
+  }
+
+  .main_container .audio_content .description_content {
+    text-align:center;
+    margin: 0 auto;
+  }
+
+}

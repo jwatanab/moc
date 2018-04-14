@@ -1,0 +1,43 @@
+html, body {
+    color: #636b6f;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 200;
+    height: 100vh;
+    margin: 0;
+  }
+  
+  a {
+    color: rgb(0, 0, 0);
+    text-decoration: none;
+    transition: .3s;
+  }
+  
+  a:hover {
+    background-color: rgb(122, 122, 169);
+  }
+  
+  .header_title {
+    font-size: 1.8em;
+  }
+  
+  .container, header, nav, main, footer {
+    padding: 50px 50px 20px;
+  }
+  
+  .main_container .audio_content .content_bar {
+    width: 80%;
+    font-size: 1.4em;
+    padding: 12px 24px;
+    border-radius: 2px;
+    box-shadow: 2px 3px 6px -2px gray;
+  }
+  
+  .main_container .audio_content .fas {
+    display: inherit;
+  }
+  
+  .main_container .audio_content .content_name{
+    padding: 0 5px;
+    max-width: 20px;
+    overflow: hidden;
+  }
