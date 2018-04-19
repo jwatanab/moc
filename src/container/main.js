@@ -4,20 +4,14 @@ import request from 'superagent'
 import ReactSlider from 'react-slider'
 import CSSTransitionGroup from 'react-addons-transition-group'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
-import VelocityTransitionGroup from 'velocity-react'
+import { VelocityTransitionGroup } from 'velocity-react'
 
 
 export default class Main extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            children: [
-                (<h1>Lorem ipsum dolor sit amet.</h1>),
-                (<h1>Lorem ipsum dolor sit amet.</h1>),
-                (<h1>Lorem ipsum dolor sit amet.</h1>),
-                (<h1>Lorem ipsum dolor sit amet.</h1>),
-                (<h1>Lorem ipsum dolor sit amet.</h1>),
-            ]
+            children: null
         }
     }
 
@@ -88,23 +82,51 @@ export default class Main extends React.Component {
         n.click()
     }
 
+    append(e) {
+        if (!this.state.children) {
+            this.setState({
+                children: (<p key="0">Lorem ipsum dolor sit amet.</p>)
+            })
+        } else {
+            console.log(this.state.children[0])
+            this.setState({
+                children: null
+            })
+        }
+    }
+
     render() {
         return (
             // DOM依存状態を抜け出すために兄弟や親として指定しないこと
             <main className="main_container">
                 <div className="audio_content">
-                    <div className="content_bar">
+                    <div className="content_bar" onClick={(e) => this.append(e)}>
                         <div className="img_content">
                             <img className="image" id="./node.jpg"></img>
                         </div>
-                        <VelocityTransitionGroup>
-                        </VelocityTransitionGroup>
                         <div className="description_content">
                             <i className="fa fa-play-circle" aria-hidden="true" id="three"></i>
                             <audio className="my_audio">
                                 <source className="notificationTone" />
                             </audio>
                             <span className="content_name">Test - list</span>
+                            <VelocityTransitionGroup
+                                runOnMount={false}
+                                enter={
+                                    {
+                                        animation: 'fadeIn',
+                                        stagger: 100,
+                                    }
+                                }
+                                leave={
+                                    {
+                                        animation: 'fadeOut',
+                                        stagger: 100,
+                                    }
+                                }
+                            >
+                                {this.state.children}
+                            </VelocityTransitionGroup>
                         </div>
                     </div>
                 </div>
