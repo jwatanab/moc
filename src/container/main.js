@@ -98,8 +98,38 @@ export default class Main extends React.Component {
     render() {
         return (
             // DOM依存状態を抜け出すために兄弟や親として指定しないこと
+
             <main className="main_container">
                 <div className="audio_content">
+                    <div className="content_bar" onClick={(e) => this.append(e)}>
+                        <div className="img_content">
+                            <img className="image" id="./node.jpg"></img>
+                        </div>
+                        <div className="description_content">
+                            <i className="fa fa-play-circle" aria-hidden="true" id="three"></i>
+                            <audio className="my_audio">
+                                <source className="notificationTone" />
+                            </audio>
+                            <span className="content_name">Test - list</span>
+                            <VelocityTransitionGroup
+                                runOnMount={false}
+                                enter={
+                                    {
+                                        animation: 'fadeIn',
+                                        stagger: 100,
+                                    }
+                                }
+                                leave={
+                                    {
+                                        animation: 'fadeOut',
+                                        stagger: 100,
+                                    }
+                                }
+                            >
+                                {this.state.children}
+                            </VelocityTransitionGroup>
+                        </div>
+                    </div>
                     <div className="content_bar" onClick={(e) => this.append(e)}>
                         <div className="img_content">
                             <img className="image" id="./node.jpg"></img>

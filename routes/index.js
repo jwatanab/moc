@@ -19,7 +19,7 @@ router.post('/content', function (req, res) {
         const db = c.db(dbName);
         const collection = db.collection(fs_collection);
 
-        const t = './Down.m4a'
+        const t = 'Serato_Recording.m4a'
         collection.findOne({ 'filename': t })
             .then(function (e) {
                 let content = [];

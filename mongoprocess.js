@@ -26,7 +26,6 @@ function insert() {
 }
 
 function findAllDocuments(collection, callback) {
-    console.log(collection.getIndexes)
     collection.find({}).toArray(function (err, docs) {
         assert.equal(err, null);
         console.log(docs)
@@ -132,7 +131,14 @@ if (require.main == module) {
         'insert': {
             message: 'Use Function',
             script: () => {
-                if (!filename || !dirfilename) return console.log('変数にファイル名、ディレクトリ名を指定してね！')
+                if (process.argv.length < 4) {
+                    console.log(`Usage: nodeprocess.js
+                        Function: Insert
+                        Argment: node mongoprocess.js Insert (fileName[upload])`)
+                    process.exit(-1)
+                }
+                const filename = process.argv[3]
+
                 // ポート接続、コールバックにはエラーか、DBコネクトが返される
                 MongoClient.connect(url, function (e, cli) {
                     // エラーが存在する場合、処理
@@ -142,7 +148,7 @@ if (require.main == module) {
                     // Mongo.GridFSインスタンス
                     var bucket = new mongodb.GridFSBucket(db)
                     // ファイル読み込み
-                    fs.createReadStream(dirfilename)
+                    fs.createReadStream(filename)
                         // 成功処理、db.fs.filesに処理されたblobが格納される
                         .pipe(bucket.openUploadStream(filename))
                         // エラー時
@@ -156,6 +162,12 @@ if (require.main == module) {
                             process.exit(0)
                         })
                 })
+            }
+        },
+        'test': {
+            'message': 'Use Function',
+            script: () => {
+                console.log('テストだよ')
             }
         }
     }
