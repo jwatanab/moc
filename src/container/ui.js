@@ -110,5 +110,4 @@ export default class Ui_Bar extends React.Component {
             </div>
         )
     }
-
 }
