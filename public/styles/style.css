@@ -56,71 +56,152 @@ max-height: 250px;
 
 @media screen and (max-width: 480px){
 
-/**
- * コンテンツ親
- */
-.main_container .audio_content .content_bar {
-  width: 80%;
-  margin: 0 auto;
-  font-size: 1.4em;
-  padding: 0 24px;
-  border-radius: 2px;
-  box-shadow: none;
-}
+  /**
+   * コンテンツ親
+   */
+  .main_container .audio_content .content_bar {
+    width: 80%;
+    margin: 0 auto;
+    font-size: 1.4em;
+    padding: 0 24px;
+    border-radius: 2px;
+    box-shadow: none;
+  }
 
-/**
- *
- */
-.main_container .audio_content .content_bar:hover {
-  opacity: 0.8;
-  transition: .3s;
-}
+  /**
+   *
+   */
+  .main_container .audio_content .content_bar:hover {
+    /*opacity: 0.8;*/
+    transition: .3s;
+  }
 
-/**
- * 画像
- */
-.img_content .image {
-  max-height: 250px;    
-  max-width: 300px;
-  display: block;
-  margin: 0 auto;
-  border-radius: 10px;
-  box-shadow: 1px 1px 2px  #dee7ec;
-}
+  /**
+   * 画像
+   */
 
-/**
- * 曲名
- */
-.main_container .audio_content .description_content {
-  padding: 22px 5px;
-  overflow: hidden;
-  display: block;
+  .img_content {
+    position: relative;
+  }
 
-  margin: 0 auto;
-}
+  .img_content .image {
+    max-height: 250px;    
+    max-width: 300px;
+    display: block;
+    margin: 0 auto;
+    border-radius: 10px;
+    box-shadow: 1px 1px 2px  #dee7ec;
+  }
 
-.main_container .audio_content .description_content {
-  text-align:center;
-  margin: 0 auto;
-}
-
-/**
- * テスト 
- */
- .container {
-  position: relative;
-}
-
-.slide-enter {
+  /**
+   * 再生ボタン
+   */
+  #test {
     position: absolute;
-    width: 100%;
-    transform: translateX(100%);
-}
+    top: 38%;
+    left: 42%;
+  }
 
-.slide-leave {
+  #test:before {
+    display: block;
+    content: "";
+    border: 32px solid transparent;    /*top right bottom を透明化 */ 
+    border-radius: 5px;
+    border-left: 52px solid rgba(255, 255, 255, 0.5);
+  }
+
+  /**
+   * 停止ボタン
+   */
+  #p_test {
     position: absolute;
-    width: 100%;
-    transform: translateX(0%);
-}
+    display: none;
+    top: 39%;
+    left: 39%;
+    width: 58px;
+    height: 58px;
+    border-width: 10px;
+    border-color: rgba(255, 255, 255, 0.5);
+    border-style: double;
+    border-width: 0px 0 0px 56px;
+  }
 
+  /**
+   * 曲名
+   */
+  .main_container .audio_content .ui_content {
+    padding: 22px 5px;
+    overflow: hidden;
+    display: block;
+    text-align:center;
+  }
+
+  /**
+   * 操作部分
+   */
+  .main_container .description_content {
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  /**
+   * 説明欄　フォント
+   */
+  .p_inner {
+    margin-right: 15px;
+    font-size: 0.73em;
+  }
+
+  /**
+   * コンテンツバー
+   */
+  .main_content_ber {
+    position: fixed;
+    transition: .7s;
+    right: 20px;
+    bottom: 80px;
+    padding: 10px;
+    width: 28px;
+    height: 28px;
+    background-color: rgba(68, 184, 192, 0.9);
+    border-radius: 50%;
+  }
+
+  /**
+   * モーダル部分
+   */
+  .modal {
+    position: fixed;
+    margin: 0 auto;
+    text-align: center;
+    z-index: 3;
+    transition: .7s;
+    height: 100%;
+    width: 100%;
+    background-color: rgb(255, 255, 255);
+  }
+
+  .modal .close {
+    font-size: 4em;
+    position: fixed;
+    top: 7px;
+    right: 20px;
+  }
+
+  .modal .text_content {
+    font-family: 'Raleway', sans-serif;
+    margin: auto inherit;
+    padding: auto inherit;
+    font-size: 2em;
+    padding: 70px 0 80px;
+  }
+  
+  .clone {
+    max-height: 250px;    
+    max-width: 300px;
+    display: block;
+    margin: 0 auto;
+    border-radius: 10px;
+    box-shadow: 1px 1px 2px  #dee7ec;
+  }
 }

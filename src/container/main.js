@@ -19,7 +19,6 @@ export default class Main extends React.Component {
         // Init Image Front
         Array.from(document.querySelectorAll('.image'))
             .map(i => {
-                console.log('start')
                 request.post('/main_init')
                     .responseType('arraybuffer')
                     .query({ name: i.id })
@@ -40,7 +39,7 @@ export default class Main extends React.Component {
                     const name = `#${icon.id} + audio source`
                     const boolean = document.querySelector(name).getAttribute('src')
                     if (boolean) {
-                        if (icon.classNamicon === 'fa fa-play-circle') {
+                        if (icon.className === 'fa fa-play-circle') {
                             icon.className = 'fa fa-pause-circle'
                             icon.nextElementSibling.play()
                             return
@@ -85,10 +84,9 @@ export default class Main extends React.Component {
     append(e) {
         if (!this.state.children) {
             this.setState({
-                children: (<p key="0">Lorem ipsum dolor sit amet.</p>)
+                children: (<p className="p_Inner">デスクリプション</p>)
             })
         } else {
-            console.log(this.state.children[0])
             this.setState({
                 children: null
             })
@@ -98,67 +96,52 @@ export default class Main extends React.Component {
     render() {
         return (
             // DOM依存状態を抜け出すために兄弟や親として指定しないこと
-
             <main className="main_container">
                 <div className="audio_content">
-                    <div className="content_bar" onClick={(e) => this.append(e)}>
-                        <div className="img_content">
-                            <img className="image" id="./node.jpg"></img>
-                        </div>
-                        <div className="description_content">
-                            <i className="fa fa-play-circle" aria-hidden="true" id="three"></i>
-                            <audio className="my_audio">
-                                <source className="notificationTone" />
-                            </audio>
-                            <span className="content_name">Test - list</span>
-                            <VelocityTransitionGroup
-                                runOnMount={false}
-                                enter={
-                                    {
-                                        animation: 'fadeIn',
+                    <div className="content_bar">
+                        {
+                            //--------------------------------------------
+                            //content_bar
+                            //--------------------------------------------
+                        }
+                        <div className="touch_ui">
+                            <div className="img_content" onClick={(e) => this.append(e)}>
+                                <img className="image" id="./node.jpg"></img>
+                                <span id="test"></span>
+                                <span id="p_test"></span>
+                            </div>
+                            <div className="ui_content">
+                                <audio className="my_audio">
+                                    <source className="notificationTone" />
+                                </audio>
+                                <span className="content_name">実験 - テスト</span>
+                            </div>
+                            <div className="description_content">
+                                <VelocityTransitionGroup
+                                    runOnMount={false}
+                                    enter={{
+                                        animation: 'slideDown',
                                         stagger: 100,
-                                    }
-                                }
-                                leave={
-                                    {
-                                        animation: 'fadeOut',
+                                    }}
+                                    leave={{
+                                        animation: 'slideUp',
                                         stagger: 100,
-                                    }
-                                }
-                            >
-                                {this.state.children}
-                            </VelocityTransitionGroup>
+                                    }}>
+                                    {this.state.children}
+                                </VelocityTransitionGroup>
+                            </div>
                         </div>
+                        {
+                            //--------------------------------------------
+                            //content_bar
+                            //--------------------------------------------
+                        }
                     </div>
-                    <div className="content_bar" onClick={(e) => this.append(e)}>
-                        <div className="img_content">
-                            <img className="image" id="./node.jpg"></img>
-                        </div>
-                        <div className="description_content">
-                            <i className="fa fa-play-circle" aria-hidden="true" id="three"></i>
-                            <audio className="my_audio">
-                                <source className="notificationTone" />
-                            </audio>
-                            <span className="content_name">Test - list</span>
-                            <VelocityTransitionGroup
-                                runOnMount={false}
-                                enter={
-                                    {
-                                        animation: 'fadeIn',
-                                        stagger: 100,
-                                    }
-                                }
-                                leave={
-                                    {
-                                        animation: 'fadeOut',
-                                        stagger: 100,
-                                    }
-                                }
-                            >
-                                {this.state.children}
-                            </VelocityTransitionGroup>
-                        </div>
-                    </div>
+                    {
+                        //--------------------------------------------
+                        //audio_content
+                        //--------------------------------------------
+                    }
                 </div>
             </main>
         )

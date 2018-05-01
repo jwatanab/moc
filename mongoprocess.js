@@ -7,24 +7,6 @@ var fs = require('fs'),
     dbName = 'archiveMoc',
     document = 'fs.files'
 
-function insert() {
-    if (!filename || !dirfilename) return console.log('変数にファイル名、ディレクトリ名を指定してね！')
-    MongoClient.connect(url, function (e, cli) {
-        assert.ifError(e)
-        const db = cli.db(dbName)
-        var bucket = new mongodb.GridFSBucket(db)
-        fs.createReadStream(dirfilename)
-            .pipe(bucket.openUploadStream(filename))
-            .on('error', function (e) {
-                assert.ifError(e)
-            })
-            .on('finish', function () {
-                console.log('success')
-                process.exit(0)
-            })
-    })
-}
-
 function findAllDocuments(collection, callback) {
     collection.find({}).toArray(function (err, docs) {
         assert.equal(err, null);
@@ -162,12 +144,6 @@ if (require.main == module) {
                             process.exit(0)
                         })
                 })
-            }
-        },
-        'test': {
-            'message': 'Use Function',
-            script: () => {
-                console.log('テストだよ')
             }
         }
     }

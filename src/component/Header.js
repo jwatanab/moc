@@ -9,6 +9,7 @@ export default class Header extends React.Component {
         return (
             <header className="header_container">
                 <div className="header_title">Moc 1.1</div>
-            </header>)
+            </header>
+        )
     }
 }
