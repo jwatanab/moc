@@ -82,6 +82,20 @@ export default class Main extends React.Component {
     }
 
     append(e) {
+        const play_btn = document.querySelector('#test')
+        const pause_btn = document.querySelector('#p_test')
+
+        play_btn.style.display ? null : play_btn.style.display = 'block'
+        pause_btn.style.display ? null : pause_btn.style.display = 'block'
+
+        if (play_btn.style.display === 'block') {
+            play_btn.style.display = 'none'
+            pause_btn.style.display = 'block'
+        } else if (pause_btn.style.display === 'block') {
+            play_btn.style.display = 'block'
+            pause_btn.style.display = 'none'
+        }
+
         if (!this.state.children) {
             this.setState({
                 children: (<p className="p_Inner">デスクリプション</p>)

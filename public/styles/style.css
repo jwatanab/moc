@@ -93,6 +93,17 @@ max-height: 250px;
     box-shadow: 1px 1px 2px  #dee7ec;
   }
 
+  .img_content .image:before,
+  .img_content .image:after {
+    content:"";
+    display:block;
+    height:1px;
+    width:100%;
+      background:-webkit-gradient(linear, left top, right bottom, from(#f00), to(#00f));
+      background:-moz-linear-gradient(left, #f00, #00f);
+      background:linear-gradient(left, #f00, #00f);
+    }
+
   /**
    * 再生ボタン
    */
