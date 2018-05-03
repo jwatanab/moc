@@ -107,6 +107,10 @@ export default class Main extends React.Component {
         }
     }
 
+    btnClick() {
+
+    }
+
     render() {
         return (
             // DOM依存状態を抜け出すために兄弟や親として指定しないこと
@@ -117,13 +121,25 @@ export default class Main extends React.Component {
                             //--------------------------------------------
                             //content_bar
                             //--------------------------------------------
-                        }
-                        <div className="touch_ui">
-                            <div class="img_content">
+                            /**
+                             * <div class="img_content">
                                 <div class="border_bg"></div>
-                                <img class="img" src="../static/node.jpg"></img>
+                                <img class="img"></img>
                                 <span id="test"></span>
                                 <span id="p_test"></span>
+                            </div>
+                             */
+                        }
+                        <div className="touch_ui">
+                            <div className="img_content" onClick={(e) => this.append(e)}>
+                                <div className="border_bg"></div>
+                                <img className="img" id="./node.jpg"></img>
+                                {
+                                    //----------------------------------
+                                    // <span id="test"></span>
+                                    // <span id="p_test"></span>
+                                    //----------------------------------
+                                }
                             </div>
                             <div className="ui_content">
                                 <audio className="my_audio">
