@@ -23,11 +23,11 @@
             <div class="content_bar">
                 <div class="parent_img_content">
                     <div class="img_content">
-                        <img class="img" src="./node.jpg"></img>
+                        <div class="border_bg"></div>
+                        <img class="img" src="../static/node.jpg"></img>
                     </div>
                 </div>
                 <div class="description_content">
-                    <!-- <i class="fa fa-play-circle" aria-hidden="true" id="three"></i> -->
                     <audio class="my_audio">
                         <source class="notificationTone" />
                     </audio>
@@ -37,5 +37,27 @@
         </div>
     </main>
 </body>
+<script>
+    window.onload = () => {
+        let nodeList = {}
+
+        nodeList.isProduction = document.querySelectorAll('.img_content') //画像配置DOM
+
+        Array.from(nodeList.isProduction).map(i => {
+            i.onclick = () => {
+                console.log('start')
+                const bg = i.querySelector('.border_bg')
+                if (bg.style.opacity === '')
+                    bg.style.opacity = '1'
+                else if (bg.style.opacity === '0')
+                    bg.style.opacity = '1'
+                else if (bg.style.opacity === '1')
+                    bg.style.opacity = '0'
+                else
+                    return false
+            }
+        })
+    }
+</script>
 
 </html>

@@ -1,6 +1,5 @@
 window.onload = () => {
 
-
     Array.from(document.querySelectorAll('.content_bar .fa'))
         .map(i => {
             i.onclick = (e) => {

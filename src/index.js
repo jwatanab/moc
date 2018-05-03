@@ -9,4 +9,4 @@ addEventListener('load', () => ReactDOM.render(
         <Ui_Bar />
         <Header />
         <Main />
-    </div>), document.querySelector('#root')))
+    </div>), document.querySelector('main')))

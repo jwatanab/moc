@@ -119,8 +119,9 @@ export default class Main extends React.Component {
                             //--------------------------------------------
                         }
                         <div className="touch_ui">
-                            <div className="img_content" onClick={(e) => this.append(e)}>
-                                <img className="image" id="./node.jpg"></img>
+                            <div class="img_content">
+                                <div class="border_bg"></div>
+                                <img class="img" src="../static/node.jpg"></img>
                                 <span id="test"></span>
                                 <span id="p_test"></span>
                             </div>

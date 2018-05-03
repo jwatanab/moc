@@ -1,218 +1,217 @@
-html, body {
-  color: #636b6f;
-  font-family: 'Raleway', sans-serif;
-  font-weight: 200;
-  height: 100vh;
-  margin: 0;
-}
-
-a {
-color: rgb(0, 0, 0);
-text-decoration: none;
-transition: .3s;
-}
-
-a:hover {
-background-color: rgb(122, 122, 169);
-}
-
-.header_title {
-font-size: 1.8em;
-}
-
-.container, header, nav, main, footer {
-padding: 50px 50px 20px;
-}
-
-.main_container .audio_content .content_bar {
-width: 80%;
-font-size: 1.4em;
-padding: 0 24px;
-border-radius: 2px;
-box-shadow: 2px 3px 6px 2px gray;
-}
-
-.main_container .audio_content .fas {
-display: inherit;
-}
-
-.main_container .audio_content .content_name {
-padding: 12px 5px;
-max-width: 20px;
-overflow: hidden;
-}
-
-.content_bar .img_content {
-  /** テスト */
-  display: block;
-}
-
-.img_content .img {
-/* max-width: 250px; */
-display: block;
-margin: 0 auto;
-max-height: 250px;
-}
-
-@media screen and (max-width: 480px){
-
-  /**
-   * コンテンツ親
-   */
-  .main_container .audio_content .content_bar {
-    width: 80%;
-    margin: 0 auto;
-    font-size: 1.4em;
-    padding: 0 24px;
-    border-radius: 2px;
-    box-shadow: none;
-  }
-
-  /**
-   *
-   */
-  .main_container .audio_content .content_bar:hover {
-    /*opacity: 0.8;*/
-    transition: .3s;
-  }
-
-  /**
-   * 画像
-   */
-
-  .img_content {
-    position: relative;
-  }
-
-  .img_content .image {
-    max-height: 250px;    
-    max-width: 300px;
-    display: block;
-    margin: 0 auto;
-    border-radius: 10px;
-    box-shadow: 1px 1px 2px  #dee7ec;
-  }
-
-  .img_content .image:before,
-  .img_content .image:after {
-    content:"";
-    display:block;
-    height:1px;
-    width:100%;
-      background:-webkit-gradient(linear, left top, right bottom, from(#f00), to(#00f));
-      background:-moz-linear-gradient(left, #f00, #00f);
-      background:linear-gradient(left, #f00, #00f);
+    html,body {
+        color: #636b6f;
+        font-family: 'Raleway', sans-serif;
+        font-weight: 200;
+        height: 100vh;
+        margin: 0;
     }
 
-  /**
-   * 再生ボタン
-   */
-  #test {
-    position: absolute;
-    top: 38%;
-    left: 42%;
-  }
+    a {
+        color: rgb(0, 0, 0);
+        text-decoration: none;
+        transition: .3s;
+    }
 
-  #test:before {
-    display: block;
-    content: "";
-    border: 32px solid transparent;    /*top right bottom を透明化 */ 
-    border-radius: 5px;
-    border-left: 52px solid rgba(255, 255, 255, 0.5);
-  }
+    a:hover {
+        background-color: rgb(122, 122, 169);
+    }
 
-  /**
-   * 停止ボタン
-   */
-  #p_test {
-    position: absolute;
-    display: none;
-    top: 39%;
-    left: 39%;
-    width: 58px;
-    height: 58px;
-    border-width: 10px;
-    border-color: rgba(255, 255, 255, 0.5);
-    border-style: double;
-    border-width: 0px 0 0px 56px;
-  }
+    .header_title {
+        font-size: 1.8em;
+    }
 
-  /**
-   * 曲名
-   */
-  .main_container .audio_content .ui_content {
-    padding: 22px 5px;
-    overflow: hidden;
-    display: block;
-    text-align:center;
-  }
+    .container,
+    header,
+    nav,
+    main,
+    footer {
+        padding: 50px 50px 20px;
+    }
+    
+    /*----------------------------------------
+     * コンテナ部分基底
+     *----------------------------------------*/
+    .main_container .audio_content .content_bar {
+        width: 80%;
+        font-size: 1.4em;
+        padding: 0 24px;
+        border-radius: 2px;
+        box-shadow: 2px 3px 6px 2px gray;
+    }
 
-  /**
-   * 操作部分
-   */
-  .main_container .description_content {
-    margin: 0 auto;
-    text-align: center;
-  }
+    .main_container .audio_content .fas {
+        display: inherit;
+    }
 
-  /**
-   * 説明欄　フォント
-   */
-  .p_inner {
-    margin-right: 15px;
-    font-size: 0.73em;
-  }
+    .main_container .audio_content .content_name {
+        padding: 12px 5px;
+        max-width: 20px;
+        overflow: hidden;
+    }
 
-  /**
-   * コンテンツバー
-   */
-  .main_content_ber {
-    position: fixed;
-    transition: .7s;
-    right: 20px;
-    bottom: 80px;
-    padding: 10px;
-    width: 28px;
-    height: 28px;
-    background-color: rgba(68, 184, 192, 0.9);
-    border-radius: 50%;
-  }
+    @media screen and (max-width: 480px) {
 
-  /**
-   * モーダル部分
-   */
-  .modal {
-    position: fixed;
-    margin: 0 auto;
-    text-align: center;
-    z-index: 3;
-    transition: .7s;
-    height: 100%;
-    width: 100%;
-    background-color: rgb(255, 255, 255);
-  }
+        /*----------------------------------------
+         * コンテナ部分基底
+         *----------------------------------------*/
+        .main_container .audio_content .content_bar {
+            width: 80%;
+            margin: 0 auto;
+            font-size: 1.4em;
+            padding: 0 24px;
+            border-radius: 2px;
+            box-shadow: none;
+        }
 
-  .modal .close {
-    font-size: 4em;
-    position: fixed;
-    top: 7px;
-    right: 20px;
-  }
+        /*----------------------------------------
+         * 画像部分
+         *----------------------------------------*/
+        .img_content {
+            position: relative;
+            display: block;
+            margin: 50px auto;
+            font-size: 1.4em;
+            height: 250px;
+            width: 250px;
+        }
 
-  .modal .text_content {
-    font-family: 'Raleway', sans-serif;
-    margin: auto inherit;
-    padding: auto inherit;
-    font-size: 2em;
-    padding: 70px 0 80px;
-  }
-  
-  .clone {
-    max-height: 250px;    
-    max-width: 300px;
-    display: block;
-    margin: 0 auto;
-    border-radius: 10px;
-    box-shadow: 1px 1px 2px  #dee7ec;
-  }
-}
+        .img_content .border_bg {
+            position: absolute;
+            margin: 0 auto;
+            opacity: 0;
+            width: 102%;
+            height: 102%;
+            transition: .7s;
+            border-radius: 9.3%;
+            -moz-border-radius: 9.3%;
+            -webkit-border-radius: 9.3%;
+            background: linear-gradient(to right, rgba(64, 165, 190, 0.6), rgba(61, 167, 61, 0.6));
+        }
+
+        .img_content .img {
+            position: absolute;
+            margin: 0 auto;
+            top: 1%;
+            left: 1%;
+            vertical-align: bottom;
+            width: 100%;
+            height: 100%;
+            border-radius: 9.3%;
+            -moz-border-radius: 9.3%;
+            -webkit-border-radius: 9.3%;
+            box-shadow: 1px 1px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /*----------------------------------------
+         * 再生ボタン
+         *----------------------------------------*/
+        #test {
+            position: absolute;
+            top: 38%;
+            left: 42%;
+        }
+
+        #test:before {
+            display: block;
+            content: "";
+            border: 32px solid transparent;
+            /*top right bottom を透明化 */
+            border-radius: 5px;
+            border-left: 52px solid rgba(255, 255, 255, 0.5);
+        }
+
+        /*----------------------------------------
+         * 停止ボタン
+         *----------------------------------------*/
+        #p_test {
+            position: absolute;
+            display: none;
+            top: 39%;
+            left: 39%;
+            width: 58px;
+            height: 58px;
+            border-width: 10px;
+            border-color: rgba(255, 255, 255, 0.5);
+            border-style: double;
+            border-width: 0px 0 0px 56px;
+        }
+
+        /*----------------------------------------
+         * 曲名
+         *----------------------------------------*/
+        .main_container .audio_content .ui_content {
+            padding: 22px 5px;
+            overflow: hidden;
+            display: block;
+            text-align: center;
+        }
+
+        /*----------------------------------------
+         * 操作部品
+         *----------------------------------------*/
+        .main_container .description_content {
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        /*----------------------------------------
+         * 説明欄フォント
+         *----------------------------------------*/
+        .p_inner {
+            margin-right: 15px;
+            font-size: 0.73em;
+        }
+
+        /*----------------------------------------
+         * コンテンツバー
+         *----------------------------------------*/
+        .main_content_ber {
+            position: fixed;
+            transition: .7s;
+            right: 20px;
+            bottom: 80px;
+            padding: 10px;
+            width: 28px;
+            height: 28px;
+            background-color: rgba(68, 184, 192, 0.9);
+            border-radius: 50%;
+        }
+
+        /*----------------------------------------
+         * モーダル部分
+         *----------------------------------------*/
+        .modal {
+            position: fixed;
+            margin: 0 auto;
+            text-align: center;
+            z-index: 3;
+            transition: .7s;
+            height: 100%;
+            width: 100%;
+            background-color: rgb(255, 255, 255);
+        }
+
+        .modal .close {
+            font-size: 4em;
+            position: fixed;
+            top: 7px;
+            right: 20px;
+        }
+
+        .modal .text_content {
+            font-family: 'Raleway', sans-serif;
+            margin: auto inherit;
+            padding: auto inherit;
+            font-size: 2em;
+            padding: 70px 0 80px;
+        }
+
+        .clone {
+            max-height: 250px;
+            max-width: 300px;
+            display: block;
+            margin: 0 auto;
+            border-radius: 10px;
+            box-shadow: 1px 1px 2px #dee7ec;
+        }
+    }
