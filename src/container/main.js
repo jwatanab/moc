@@ -12,8 +12,7 @@ export default class Main extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            ui_touch_flag: false,
-            operation_flag: false
+
         }
     }
 
@@ -35,11 +34,13 @@ export default class Main extends React.Component {
     }
 
     operation_ui(e) {
-        // declaration
-        const play_btn = document.querySelector('#test')
-        const pause_btn = document.querySelector('#p_test')
-        const bg = document.querySelector('.border_bg')
-        const master_audio = document.querySelector(`.notificationTone`)
+        // Each declaration
+        const parentId = e.target.className === 'img_content' ? e.target.id : e.target.parentElement.id
+        const parent = document.querySelector(`#${parentId}`)
+        const play_btn = parent.querySelector('.test')
+        const pause_btn = parent.querySelector('.p_test')
+        const bg = parent.querySelector('.border_bg')
+        const master_audio = parent.parentElement.querySelector('.notificationTone')
         const promise = new Promise((resolve, reject) => {
             request.post('/content')
                 .responseType('arraybuffer')
@@ -47,12 +48,22 @@ export default class Main extends React.Component {
                 .send(null)
                 .end((err, res) => {
                     assert.ifError(err)
-                    resolve(res.body)
+                    const blob = new Blob([result], { type: 'audio/mpeg3' })
+                    const url = URL.createObjectURL(blob)
+                    resolve(url)
                 })
         })
 
+        // Individual processing
+        if (eval(`typeof this.state.${parentId}`) === 'undefined') {
+            eval(`this.state.${parentId} = {
+                ui_touch_flag: false,
+                operation_flag: false
+            }`)
+        }
+
         // Event Handler processing
-        if (this.state.ui_touch_flag) {
+        if (eval(`this.state.${parentId}.ui_touch_flag`)) {
             pause_btn.style.opacity = '1'
             master_audio.parentElement.pause()
 
@@ -64,25 +75,24 @@ export default class Main extends React.Component {
             }, 100)
             bg.style.opacity = '0'
 
-            this.state.ui_touch_flag = false
+            eval(`this.state.${parentId}.ui_touch_flag = false`)
         } else {
             // init Event Handler
-            if (this.state.operation_flag) {
+            if (eval(`this.state.${parentId}.operation_flag`)) {
                 play_btn.style.opacity = '1'
                 master_audio.parentElement.play()
-            } else
+            } else {
                 promise
                     .then((result) => {
-                        const blob = new Blob([result], { type: 'audio/mpeg3' })
-                        const url = URL.createObjectURL(blob)
-                        master_audio.setAttribute('src', url)
+                        master_audio.setAttribute('src', result)
                         master_audio.parentElement.load()
                         master_audio.parentElement.play()
-                        this.state.operation_flag = true
                     })
                     .catch((error) => {
                         console.log(error)
                     })
+                eval(`this.state.${parentId}.operation_flag = true`)
+            }
 
             setTimeout(() => {
                 play_btn.style.transition = '.7s'
@@ -92,21 +102,7 @@ export default class Main extends React.Component {
             }, 100)
             bg.style.opacity = '1'
 
-            this.state.ui_touch_flag = true
-        }
-
-        if (!this.state.children) {
-            this.setState({
-                children: (
-                    <div>
-                        <p>descrption to init modules 193.168.100.1:3000</p>
-                        <Rcslider />
-                    </div>)
-            })
-        } else {
-            this.setState({
-                children: null
-            })
+            eval(`this.state.${parentId}.ui_touch_flag = true`)
         }
     }
 
@@ -115,15 +111,44 @@ export default class Main extends React.Component {
             // DOM依存状態を抜け出すために兄弟や親として指定しないこと
             <main className="main_container">
                 <div className="audio_content">
+                    {/* audio_content -*/}
+                    <div className="content_bar">
+                        {/* content_bar */}
+                        <div className="touch_ui">
+                            <div className="img_content" id="node0" onClick={(e) => this.operation_ui(e)}>
+                                <div className="border_bg"></div>
+                                <img className="img" id="./node.jpg"></img>
+                                <span className="test"></span>
+                                <span className="p_test"></span>
+                            </div>
+                            <div className="ui_content">
+                                <audio className="my_audio">
+                                    <source className="notificationTone" />
+                                </audio>
+                                <span className="content_name">list - est</span>
+                            </div>
+                            <div className="description_content">
+                                <VelocityTransitionGroup runOnMount={false}
+                                    enter={{ animation: 'slideDown', stagger: 100 }}
+                                    leave={{ animation: 'slideUp', stagger: 100 }}>
+                                    {this.state.modal}
+                                </VelocityTransitionGroup>
+                            </div>
+                        </div>
+                        {/* content_bar */}
+                    </div>
+                    {/* audio_content */}
+                </div>
+                <div className="audio_content">
                     {/* audio_content */}
                     <div className="content_bar">
                         {/* content_bar */}
                         <div className="touch_ui">
-                            <div className="img_content" onClick={(e) => this.operation_ui(e)}>
+                            <div className="img_content" id="node1" onClick={(e) => this.operation_ui(e)}>
                                 <div className="border_bg"></div>
                                 <img className="img" id="./node.jpg"></img>
-                                <span id="test"></span>
-                                <span id="p_test"></span>
+                                <span className="test"></span>
+                                <span className="p_test"></span>
                             </div>
                             <div className="ui_content">
                                 <audio className="my_audio">

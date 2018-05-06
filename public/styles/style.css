@@ -112,13 +112,13 @@
         /*----------------------------------------
          * 再生ボタン
          *----------------------------------------*/
-        #test {
+        .test {
             position: absolute;
             top: 38%;
             left: 42%;
         }
 
-        #test:before {
+        .test:before {
             display: block;
             content: "";
             border: 32px solid transparent;
@@ -130,7 +130,7 @@
         /*----------------------------------------
          * 停止ボタン
          *----------------------------------------*/
-        #p_test {
+        .p_test {
             position: absolute;
             display: block;
             opacity: 0;
