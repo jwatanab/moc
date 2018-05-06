@@ -18,6 +18,7 @@ export default class Main extends React.Component {
 
     componentDidMount() {
         // Init Image Front
+        // console.log(front_index)
         Array.from(document.querySelectorAll('.img'))
             .map(i => {
                 request.post('/main_init')
@@ -39,9 +40,9 @@ export default class Main extends React.Component {
         const parent = document.querySelector(`#${parentId}`)
         const play_btn = parent.querySelector('.test')
         const pause_btn = parent.querySelector('.p_test')
-        const bg = parent.querySelector('.border_bg')
-        const master_audio = parent.parentElement.querySelector('.notificationTone')
-        const promise = new Promise((resolve, reject) => {
+        const border = parent.querySelector('.border_bg')
+        const audio = parent.parentElement.querySelector('.notificationTone')
+        const get_src = new Promise((resolve, reject) => {
             request.post('/content')
                 .responseType('arraybuffer')
                 .query({ name: './Down.m4a' })
@@ -53,7 +54,7 @@ export default class Main extends React.Component {
                     resolve(url)
                 })
         })
-
+る
         // Individual processing
         if (eval(`typeof this.state.${parentId}`) === 'undefined') {
             eval(`this.state.${parentId} = {
@@ -65,7 +66,7 @@ export default class Main extends React.Component {
         // Event Handler processing
         if (eval(`this.state.${parentId}.ui_touch_flag`)) {
             pause_btn.style.opacity = '1'
-            master_audio.parentElement.pause()
+            audio.parentElement.pause()
 
             setTimeout(() => {
                 pause_btn.style.transition = '.7s'
@@ -73,20 +74,20 @@ export default class Main extends React.Component {
 
                 setTimeout(() => pause_btn.setAttribute('style', 'opacity: 0;'), 300)
             }, 100)
-            bg.style.opacity = '0'
+            border.style.opacity = '0'
 
             eval(`this.state.${parentId}.ui_touch_flag = false`)
         } else {
             // init Event Handler
             if (eval(`this.state.${parentId}.operation_flag`)) {
                 play_btn.style.opacity = '1'
-                master_audio.parentElement.play()
+                audio.parentElement.play()
             } else {
-                promise
+                get_src
                     .then((result) => {
-                        master_audio.setAttribute('src', result)
-                        master_audio.parentElement.load()
-                        master_audio.parentElement.play()
+                        audio.setAttribute('src', result)
+                        audio.parentElement.load()
+                        audio.parentElement.play()
                     })
                     .catch((error) => {
                         console.log(error)
@@ -100,7 +101,7 @@ export default class Main extends React.Component {
 
                 setTimeout(() => play_btn.setAttribute('style', 'opacity: 0;'), 300)
             }, 100)
-            bg.style.opacity = '1'
+            border.style.opacity = '1'
 
             eval(`this.state.${parentId}.ui_touch_flag = true`)
         }
