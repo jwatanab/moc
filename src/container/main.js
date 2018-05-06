@@ -48,7 +48,7 @@ export default class Main extends React.Component {
                 .query({ name: parentId })
                 .send(null)
                 .end((err, res) => {
-                    assert.ifError(err)
+                    assert.ifError(reject(err))
                     const blob = new Blob([result], { type: 'audio/mpeg3' })
                     const url = URL.createObjectURL(blob)
                     resolve(url)
