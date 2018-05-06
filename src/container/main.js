@@ -45,7 +45,7 @@ export default class Main extends React.Component {
         const get_src = new Promise((resolve, reject) => {
             request.post('/content')
                 .responseType('arraybuffer')
-                .query({ name: './Down.m4a' })
+                .query({ name: parentId })
                 .send(null)
                 .end((err, res) => {
                     assert.ifError(err)
@@ -54,7 +54,7 @@ export default class Main extends React.Component {
                     resolve(url)
                 })
         })
-る
+
         // Individual processing
         if (eval(`typeof this.state.${parentId}`) === 'undefined') {
             eval(`this.state.${parentId} = {
