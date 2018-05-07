@@ -42,18 +42,6 @@ export default class Main extends React.Component {
         const pause_btn = parent.querySelector('.p_test')
         const border = parent.querySelector('.border_bg')
         const audio = parent.parentElement.querySelector('.notificationTone')
-        const get_src = new Promise((resolve, reject) => {
-            request.post('/content')
-                .responseType('arraybuffer')
-                .query({ name: parentId })
-                .send(null)
-                .end((err, res) => {
-                    assert.ifError(reject(err))
-                    const blob = new Blob([result], { type: 'audio/mpeg3' })
-                    const url = URL.createObjectURL(blob)
-                    resolve(url)
-                })
-        })
 
         // Individual processing
         if (eval(`typeof this.state.${parentId}`) === 'undefined') {
@@ -66,7 +54,7 @@ export default class Main extends React.Component {
         // Event Handler processing
         if (eval(`this.state.${parentId}.ui_touch_flag`)) {
             pause_btn.style.opacity = '1'
-            audio.parentElement.pause()
+            operation_audio(audio, true)
 
             setTimeout(() => {
                 pause_btn.style.transition = '.7s'
@@ -105,6 +93,36 @@ export default class Main extends React.Component {
 
             eval(`this.state.${parentId}.ui_touch_flag = true`)
         }
+    }
+    
+    /**
+     * @param {boolean} condition_flag
+     * @param {HTMLInputElement} e
+     * @return
+     */
+    operation_audio(condition_flag, e){
+        //-----------------------------
+        //flagがtrueだった場合、再生
+        //-----------------------------
+    }
+    
+    /**
+     * @author parentId
+     * @param e {string} 
+     * @return {Promises}
+     */
+    get_src(e){
+        return new Promise((resolve, reject) => {
+            request.post('/content')
+                .responseType('arraybuffer')
+                .query({ name: e })
+                .end((err, res) => {
+                    assert.ifError(reject(err))
+                    const blob = new Blob([result], { type: 'audio/mpeg3' })
+                    const url = URL.createObjectURL(blob)
+                    resolve(url)
+                })
+        })
     }
 
     render() {
