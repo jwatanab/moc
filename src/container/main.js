@@ -40,11 +40,15 @@ export default class Main extends React.Component {
                 for (let i = 0; i < audio_list.length; i++)
                     if (audio_list[i] !== e.target)
                         this.operation_ui({ target: audio_list[i] }, true)
-            }, false)
+            })
+
+            audio_list[j].addEventListener('ended', (e) => {
+                this.operation_ui({ target: audio_list[j] }, true)
+            })
         }
     }
 
-    operation_ui(e, toggle_ui = null) {
+    operation_ui(e, audio_state = null) {
         // Each declaration
         const parentId = e.target.className === 'img_content' ? e.target.id : e.target.parentElement.id
         const parent = document.querySelector(`#${parentId}`)
@@ -61,12 +65,11 @@ export default class Main extends React.Component {
             }`)
         }
 
-        // toggle ui
-        if (toggle_ui) {
+        // 
+        if (audio_state) {
             if (typeof audio.src !== 'undifined') {
                 setTimeout(() => audio.parentElement.pause(), 300)
             }
-
             border.style.opacity = '0'
             return eval(`this.state.${parentId}.ui_touch_flag = false`)
         }
