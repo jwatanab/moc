@@ -108,9 +108,10 @@ export default class Main extends React.Component {
         })
     }
 
+    operation_audio(cond, audio)
+
     render() {
         return (
-            // DOM依存状態を抜け出すために兄弟や親として指定しないこと
             <main className="main_container">
                 <div className="audio_content">
                     {/* audio_content -*/}
@@ -136,15 +137,11 @@ export default class Main extends React.Component {
                                     {this.state.modal}
                                 </VelocityTransitionGroup>
                             </div>
-                        </div>
-                        {/* content_bar */}
-                    </div>
-                    {/* audio_content */}
+                        </div> {/* content_bar */}
+                    </div> {/* audio_content */}
                 </div>
                 <div className="audio_content">
-                    {/* audio_content */}
                     <div className="content_bar">
-                        {/* content_bar */}
                         <div className="touch_ui">
                             <div className="img_content" id="node1" onClick={(e) => this.operation_ui(e)}>
                                 <div className="border_bg"></div>
@@ -165,10 +162,8 @@ export default class Main extends React.Component {
                                     {this.state.modal}
                                 </VelocityTransitionGroup>
                             </div>
-                        </div>
-                        {/* content_bar */}
-                    </div>
-                    {/* audio_content */}
+                        </div> {/* content_bar */}
+                    </div> {/* audio_content */}
                 </div>
             </main>
         )
