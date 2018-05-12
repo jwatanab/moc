@@ -42,18 +42,6 @@ export default class Main extends React.Component {
         const pause_btn = parent.querySelector('.p_test')
         const border = parent.querySelector('.border_bg')
         const audio = parent.parentElement.querySelector('.notificationTone')
-        const get_src = new Promise((resolve, reject) => {
-            request.post('/content')
-                .responseType('arraybuffer')
-                .query({ name: parentId })
-                .send(null)
-                .end((err, res) => {
-                    assert.ifError(reject(err))
-                    const blob = new Blob([result], { type: 'audio/mpeg3' })
-                    const url = URL.createObjectURL(blob)
-                    resolve(url)
-                })
-        })
 
         // Individual processing
         if (eval(`typeof this.state.${parentId}`) === 'undefined') {
@@ -66,7 +54,7 @@ export default class Main extends React.Component {
         // Event Handler processing
         if (eval(`this.state.${parentId}.ui_touch_flag`)) {
             pause_btn.style.opacity = '1'
-            audio.parentElement.pause()
+            this.operation_audio(false, audio)
 
             setTimeout(() => {
                 pause_btn.style.transition = '.7s'
@@ -81,17 +69,11 @@ export default class Main extends React.Component {
             // init Event Handler
             if (eval(`this.state.${parentId}.operation_flag`)) {
                 play_btn.style.opacity = '1'
-                audio.parentElement.play()
+                this.operation_audio(true, audio)
             } else {
-                get_src
-                    .then((result) => {
-                        audio.setAttribute('src', result)
-                        audio.parentElement.load()
-                        audio.parentElement.play()
-                    })
-                    .catch((error) => {
-                        console.log(error)
-                    })
+                this.src_gen(parentId)
+                    .then((result) => this.operation_audio(true, audio, 'init'))
+                    .catch((error) => console.log(error))
                 eval(`this.state.${parentId}.operation_flag = true`)
             }
 
@@ -105,6 +87,25 @@ export default class Main extends React.Component {
 
             eval(`this.state.${parentId}.ui_touch_flag = true`)
         }
+    }
+
+    /**
+     * @param {String} request_name
+     * @return {Promise}
+     */
+    src_gen(request_name) {
+        return new Promise((resolve, reject) => {
+            request.post('/content')
+                .responseType('arraybuffer')
+                .query({ name: request_name })
+                .send(null)
+                .end((err, res) => {
+                    assert.ifError(reject(err))
+                    const blob = new Blob([result], { type: 'audio/mpeg3' })
+                    const url = URL.createObjectURL(blob)
+                    resolve(url)
+                })
+        })
     }
 
     render() {
