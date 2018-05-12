@@ -93,7 +93,7 @@ export default class Main extends React.Component {
                 .send(null)
                 .end((err, res) => {
                     assert.ifError(err)
-                    const blob = new Blob([result], { type: 'image/png' })
+                    const blob = new Blob([res.body], { type: 'audio/mpeg3' })
                     const url = URL.createObjectURL(blob)
                     resolve(url)
                 })
