@@ -34,7 +34,6 @@ export default class Ui_Bar extends React.Component {
     render() {
         return (
             <div>
-                <audio className="master"></audio>
                 <VelocityTransitionGroup
                     runOnMount={false}
                     enter={{

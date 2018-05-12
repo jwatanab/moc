@@ -19,6 +19,7 @@ export default class Main extends React.Component {
         // Init Image Front
         Array.from(document.querySelectorAll('.img'))
             .map(i => {
+                const parentId = i.parentElement.id
                 request.post('/main_init')
                     .responseType('arraybuffer')
                     .query({ name: i.id })
@@ -30,16 +31,27 @@ export default class Main extends React.Component {
                         i.src = url
                     })
             })
+
+        // Init AudioElement EventHandler
+        const audio_list = document.querySelectorAll('audio')
+
+        for (let j = 0; j < audio_list.length; j++) {
+            audio_list[j].addEventListener('play', (e) => {
+                for (let i = 0; i < audio_list.length; i++)
+                    if (audio_list[i] !== e.target)
+                        this.operation_ui({ target: audio_list[i] }, true)
+            }, false)
+        }
     }
 
-    operation_ui(e) {
+    operation_ui(e, toggle_ui = null) {
         // Each declaration
         const parentId = e.target.className === 'img_content' ? e.target.id : e.target.parentElement.id
         const parent = document.querySelector(`#${parentId}`)
         const play_btn = parent.querySelector('.test')
         const pause_btn = parent.querySelector('.p_test')
         const border = parent.querySelector('.border_bg')
-        const audio = parent.parentElement.querySelector('.notificationTone')
+        const audio = parent.querySelector('.notificationTone')
 
         // Individual processing
         if (eval(`typeof this.state.${parentId}`) === 'undefined') {
@@ -47,6 +59,16 @@ export default class Main extends React.Component {
                 ui_touch_flag: false,
                 operation_flag: false
             }`)
+        }
+
+        // toggle ui
+        if (toggle_ui) {
+            if (typeof audio.src !== 'undifined') {
+                setTimeout(() => audio.parentElement.pause(), 300)
+            }
+
+            border.style.opacity = '0'
+            return eval(`this.state.${parentId}.ui_touch_flag = false`)
         }
 
         // Event Handler processing
@@ -86,10 +108,11 @@ export default class Main extends React.Component {
     }
 
     src_gen(request_name) {
+        if (request_name === "Serato_Recording") request_name = `${request_name}.m4a`
         return new Promise((resolve, reject) => {
             request.post('/content')
                 .responseType('arraybuffer')
-                .query({ filename: `${request_name}.m4a` })
+                .query({ filename: request_name })
                 .send(null)
                 .end((err, res) => {
                     assert.ifError(err)
@@ -105,10 +128,6 @@ export default class Main extends React.Component {
         if (option) {
             this.src_gen(audio.id)
                 .then((result) => {
-                    audio.parentElement.load()
-                    console.log(audio.srcObject)
-                    console.log(audio.parentElement.srcObject)
-
                     audio.src = result
                     audio.parentElement.load()
                     return audio.parentElement.play()
@@ -117,7 +136,9 @@ export default class Main extends React.Component {
                     throw new Error(e)
                 })
         } else {
-            if (operation) audio.parentElement.play()
+            if (operation) {
+                audio.parentElement.play()
+            }
             else if (typeof ope === 'undifined') return
             else if (!operation) audio.parentElement.pause()
         }
@@ -134,11 +155,11 @@ export default class Main extends React.Component {
                                 <img className="img" id="./node.jpg"></img>
                                 <span className="test"></span>
                                 <span className="p_test"></span>
-                            </div>
-                            <div className="ui_content">
                                 <audio className="my_audio">
                                     <source className="notificationTone" id="Serato_Recording" />
                                 </audio>
+                            </div>
+                            <div className="ui_content">
                                 <span className="content_name">list - est</span>
                             </div>
                             <div className="description_content">
@@ -156,14 +177,14 @@ export default class Main extends React.Component {
                         <div className="touch_ui">
                             <div className="img_content" id="node1" onClick={(e) => this.operation_ui(e)}>
                                 <div className="border_bg"></div>
-                                <img className="img" id="./node.jpg"></img>
+                                <img className="img" id="black.png"></img>
                                 <span className="test"></span>
                                 <span className="p_test"></span>
+                                <audio className="my_audio">
+                                    <source className="notificationTone" id="./Down.m4a" />
+                                </audio>
                             </div>
                             <div className="ui_content">
-                                <audio className="my_audio">
-                                    <source className="notificationTone" />
-                                </audio>
                                 <span className="content_name">list - est</span>
                             </div>
                             <div className="description_content">
