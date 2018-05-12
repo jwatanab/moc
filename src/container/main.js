@@ -48,7 +48,7 @@ export default class Main extends React.Component {
         }
     }
 
-    operation_ui(e, audio_state = null) {
+    operation_ui(e, recession = null) {
         // Each declaration
         const parentId = e.target.className === 'img_content' ? e.target.id : e.target.parentElement.id
         const parent = document.querySelector(`#${parentId}`)
@@ -65,10 +65,10 @@ export default class Main extends React.Component {
             }`)
         }
 
-        // 
-        if (audio_state) {
+        // It saves the music element
+        if (recession) {
             if (typeof audio.src !== 'undifined') {
-                setTimeout(() => audio.parentElement.pause(), 300)
+                setTimeout(() => this.operation_audio(audio, false), 300)
             }
             border.style.opacity = '0'
             return eval(`this.state.${parentId}.ui_touch_flag = false`)
