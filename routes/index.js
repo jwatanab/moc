@@ -13,14 +13,13 @@ router.get('/', (req, res, next) => {
     res.render('index')
 })
 
-router.post('/content', (req, res) => {
-    MongoClient.connect(url, (e, c) => {
-        assert.ifError(e)
-        const db = c.db(dbName)
-        const collection = db.collection(fs_collection)
+MongoClient.connect(url, (e, c) => {
+    assert.ifError(e)
+    const db = c.db(dbName)
+    const collection = db.collection(fs_collection)
 
-        const t = 'Serato_Recording.m4a'
-        collection.findOne({ 'filename': t })
+    router.post('/content', (req, res) => {
+        collection.findOne({ 'filename': req.query.filename })
             .then((e) => {
                 let content = []
                 const ins = new mongodb.GridFSBucket(db)
@@ -31,14 +30,8 @@ router.post('/content', (req, res) => {
             })
             .catch((e) => res.redirect('/'))
     })
-})
 
-router.post('/main_init', (req, res) => {
-    MongoClient.connect(url, (e, c) => {
-        assert.ifError(e)
-        const db = c.db(dbName)
-        const collection = db.collection(fs_collection)
-
+    router.post('/main_init', (req, res) => {
         collection.findOne({ 'filename': req.query.name })
             .then((e) => {
                 let content = []
