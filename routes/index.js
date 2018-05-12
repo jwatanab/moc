@@ -13,12 +13,12 @@ router.get('/', (req, res, next) => {
     res.render('index')
 })
 
-MongoClient.connect(url, (e, c) => {
-    assert.ifError(e)
-    const db = c.db(dbName)
-    const collection = db.collection(fs_collection)
+router.post('/content', (req, res) => {
+    MongoClient.connect(url, (e, c) => {
+        assert.ifError(e)
+        const db = c.db(dbName)
+        const collection = db.collection(fs_collection)
 
-    router.post('/content', (req, res) => {
         collection.findOne({ 'filename': req.query.filename })
             .then((e) => {
                 let content = []
@@ -30,8 +30,14 @@ MongoClient.connect(url, (e, c) => {
             })
             .catch((e) => res.redirect('/'))
     })
+})
 
-    router.post('/main_init', (req, res) => {
+router.post('/main_init', (req, res) => {
+    MongoClient.connect(url, (e, c) => {
+        assert.ifError(e)
+        const db = c.db(dbName)
+        const collection = db.collection(fs_collection)
+
         collection.findOne({ 'filename': req.query.name })
             .then((e) => {
                 let content = []

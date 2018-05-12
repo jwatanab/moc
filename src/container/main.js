@@ -90,9 +90,12 @@ export default class Main extends React.Component {
             request.post('/content')
                 .responseType('arraybuffer')
                 .query({ filename: `${request_name}.m4a` })
+                .send(null)
                 .end((err, res) => {
                     assert.ifError(err)
-                    resolve(new Blob([res], { type: 'audio/mpeg3' }))
+                    const blob = new Blob([result], { type: 'image/png' })
+                    const url = URL.createObjectURL(blob)
+                    resolve(url)
                 })
         })
     }
@@ -103,7 +106,10 @@ export default class Main extends React.Component {
             this.src_gen(audio.id)
                 .then((result) => {
                     audio.parentElement.load()
-                    audio.srcObject = result
+                    console.log(audio.srcObject)
+                    console.log(audio.parentElement.srcObject)
+
+                    audio.src = result
                     audio.parentElement.load()
                     return audio.parentElement.play()
                 })
