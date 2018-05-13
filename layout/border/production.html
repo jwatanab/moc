@@ -73,6 +73,7 @@
         nodeList.isProduction = document.querySelectorAll('.production') //画像配置DOM
 
         Array.from(nodeList.isProduction).map(i => {
+
             i.onclick = () => {
                 const bg = i.querySelector('.production_bg')
                 if (bg.style.opacity === '')

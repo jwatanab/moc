@@ -1,7 +1,6 @@
 import React from 'react'
 import assert, { throws } from 'assert'
 import request from 'superagent'
-import ReactSlider from 'react-slider'
 import Rcslider from 'rc-slider'
 import CSSTransitionGroup from 'react-addons-transition-group'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
@@ -15,11 +14,13 @@ export default class Main extends React.Component {
         }
     }
 
-    componentWillMount() {
+    componentDidMount() {
+        const audio_list = document.querySelectorAll('audio')
+        const level = 50
+
         // Init Image Front
         Array.from(document.querySelectorAll('.img'))
             .map(i => {
-                const parentId = i.parentElement.id
                 request.post('/main_init')
                     .responseType('arraybuffer')
                     .query({ name: i.id })
@@ -32,9 +33,28 @@ export default class Main extends React.Component {
                     })
             })
 
-        // Init AudioElement EventHandler
-        const audio_list = document.querySelectorAll('audio')
+        // Init AudioElement TouchEventHandler
+        Array.from(document.querySelectorAll('.audio_content'))
+            .map(i => {
+                let direction, position
 
+                const getPosition = (e) => { return e.touches[0].pageX }
+
+                i.addEventListener('touchstart', (e) => {
+                    position = getPosition(e)
+                    direction = ''
+                })
+                i.addEventListener('touchmove', (e) => {
+                    if (position - getPosition(e) > level) direction = 'left'
+                    else if (position - getPosition(e) < -level) direction = 'right'
+                })
+                i.addEventListener('touchend', (e) => {
+                    if (direction == 'right') return
+
+                    else if (direction == 'left') return
+                })
+            })
+        // Init AudioElement EventHandler
         for (let j = 0; j < audio_list.length; j++) {
             audio_list[j].addEventListener('play', (e) => {
                 for (let i = 0; i < audio_list.length; i++)
@@ -110,22 +130,6 @@ export default class Main extends React.Component {
         }
     }
 
-    src_gen(request_name) {
-        if (request_name === "Serato_Recording") request_name = `${request_name}.m4a`
-        return new Promise((resolve, reject) => {
-            request.post('/content')
-                .responseType('arraybuffer')
-                .query({ filename: request_name })
-                .send(null)
-                .end((err, res) => {
-                    assert.ifError(err)
-                    const blob = new Blob([res.body], { type: 'audio/mpeg3' })
-                    const url = URL.createObjectURL(blob)
-                    resolve(url)
-                })
-        })
-    }
-
     operation_audio(audio, operation, option = null) {
         if (!audio) throw new Error(`DOMException: audio is ${typeof audio}`)
         if (option) {
@@ -147,15 +151,31 @@ export default class Main extends React.Component {
         }
     }
 
+    src_gen(request_name) {
+        if (request_name === "Serato_Recording") request_name = `${request_name}.m4a`
+        return new Promise((resolve, reject) => {
+            request.post('/content')
+                .responseType('arraybuffer')
+                .query({ filename: request_name })
+                .send(null)
+                .end((err, res) => {
+                    assert.ifError(err)
+                    const blob = new Blob([res.body], { type: 'audio/mpeg3' })
+                    const url = URL.createObjectURL(blob)
+                    resolve(url)
+                })
+        })
+    }
+
     render() {
         return (
             <main className="main_container">
-                <div className="audio_content">
+                {/*<div className="audio_content">
                     <div className="content_bar">
                         <div className="touch_ui">
                             <div className="img_content" id="node0" onClick={(e) => this.operation_ui(e)}>
                                 <div className="border_bg"></div>
-                                <img className="img" id="./node.jpg"></img>
+                                <img className="img" id="out_world"></img>
                                 <span className="test"></span>
                                 <span className="p_test"></span>
                                 <audio className="my_audio">
@@ -172,15 +192,15 @@ export default class Main extends React.Component {
                                     {this.state.modal}
                                 </VelocityTransitionGroup>
                             </div>
-                        </div> {/* content_bar */}
-                    </div> {/* audio_content */}
-                </div>
+                        </div>
+                    </div> */}{/* content_bar */}
+                {/*</div>*/} {/* audio_content */}
                 <div className="audio_content">
                     <div className="content_bar">
                         <div className="touch_ui">
                             <div className="img_content" id="node1" onClick={(e) => this.operation_ui(e)}>
                                 <div className="border_bg"></div>
-                                <img className="img" id="black.png"></img>
+                                <img className="img" id="wolud"></img>
                                 <span className="test"></span>
                                 <span className="p_test"></span>
                                 <audio className="my_audio">
@@ -188,7 +208,7 @@ export default class Main extends React.Component {
                                 </audio>
                             </div>
                             <div className="ui_content">
-                                <span className="content_name">list - est</span>
+                                <span className="content_name">Wouldn't Wanna Be Swept Away</span>
                             </div>
                             <div className="description_content">
                                 <VelocityTransitionGroup runOnMount={false}
@@ -197,9 +217,9 @@ export default class Main extends React.Component {
                                     {this.state.modal}
                                 </VelocityTransitionGroup>
                             </div>
-                        </div> {/* content_bar */}
-                    </div> {/* audio_content */}
-                </div>
+                        </div>
+                    </div> {/* content_bar */}
+                </div> {/* audio_content */}
             </main>
         )
     }

@@ -1,32 +1,168 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: black;
+            padding: 50px;
+        }
 
-    <title>reveal.js</title>
+        img {
+            width: 300px;
+            height: 300px;
+        }
 
+        #slider {
+            position: relative;
+            width: 320px;
+        }
 
+        #slider a:focus {
+            outline: 0;
+        }
+
+        .slider-view {
+            position: relative;
+            border: 1px solid #bbb;
+            width: 320px;
+            /* スライダーで表示するエリアの大きさ */
+            height: 360px;
+            overflow: hidden;
+            /* 必須 */
+        }
+
+        .slider-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-color: black;
+            width: 2000px;
+            /* 本来はコンテンツの横幅を取得して動的に設定すべきです */
+        }
+
+        /* スライドするコンテンツ部分 */
+
+        .slider-container div {
+            position: relative;
+            /* ループ処理に使う */
+            float: left;
+        }
+
+        /* チラツキ対策 */
+
+        .slider-container {
+            -webkit-transform: translate3d(0, 0, 0);
+        }
+    </style>
+
+    <script>
+        window.onload = () => {
+
+            const slider = document.querySelector('#slider')
+            const container = document.querySelector('.slider-container')
+            const containerDiv = document.querySelectorAll('.slider-container div')
+
+            let pageX      //リアルタイムのX座標
+            let pageY      //リアルタイムのY座標
+            let startPageX //スタート時のX 座標の位置
+            let startTime  //スタート時の時間
+            let move_time = 0
+
+            let distance = 0
+
+            let slide = {
+                next: (index, spd, flick_flg) => {
+                    distance = distance + index;
+                    slide.scroll(distance, spd, flick_flg);
+                },
+                prev: (index, spd, flick_flg) => {
+                    distance = distance - index;
+                    slide.scroll(distance, spd, flick_flg);
+                },
+                scroll: (d, spd, flick_flg) => {
+                    let move = -d
+                    const env = `translate3d(${move}px,0,0)`
+
+                    if (flick_flg) {
+                        /* フリック時はwebkit-transformプロパティを設定し、滑らかなアニメーションにする */
+                        transit_property = `-webkit-transform ${spd}ms cubic-bezier(0,0,0.25,1)`
+                    } else {
+                        transit_property = 'none'
+                    }
+
+                    container.setAttribute('style', `-webkit-transform = ${env};-webkit-transition = ${transit_property}`)
+
+                }
+            }
+
+            slider.addEventListener('touchstart', function () {
+                event.preventDefault();     // ページが動いたり、反応を止める（A タグなど）
+                pageX = event.changedTouches[0].pageX
+                pageY = event.changedTouches[0].pageY
+                startPageX = pageX
+                startTime = + new Date()
+            })
+
+            slider.addEventListener('touchmove', function () {
+                let moveX = event.changedTouches[0].pageX
+                let absX = Math.abs(pageX - moveX)
+                let spd = 0.5
+                pageY = event.changedTouches[0].pageY
+
+                if (pageX > moveX) {
+                    slide.next(absX, spd)
+                } else if (pageX < moveX) {
+                    slide.prev(absX, spd)
+                }
+                pageX = moveX;
+            })
+
+            slider.addEventListener('touchend', function () {
+                let diffX = startPageX - pageX
+                let absX = Math.abs(diffX)
+                let mv = 200 //フリック移動距離
+                let spd = 700 //フリックスピード
+                let now = + new Date(); //現在時間
+                let diffTime = now - startTime //touchstartからの経過時間
+
+                /* フリック処理(touchstartからの経過時間が短い場合) */
+                if (diffTime < 400) {
+                    if (diffX > 0) {
+                        slide.next(mv, spd, true)
+                    } else if (diffX < 0) {
+                        slide.prev(mv, spd, true)
+                    }
+                }
+
+                move_time = 0;
+            })
+        }
+    </script>
 </head>
 
 <body>
-    <div class="reveal">
-        <div class="slides">
-            <section>Slide 1</section>
-            <section>Slide 2</section>
+    <div id="slider">
+        <div id="slider-view">
+            <div class="slider-container">
+                <div id="1">
+                    <img src="../../static/node.jpg">
+                </div>
+                <div id="2">
+                    <img src="../../static/node.jpg">
+                </div>
+                <div id="3">
+                    <img src="../../static/node.jpg">
+                </div>
+            </div>
         </div>
     </div>
-
-    <script src="lib/js/head.min.js"></script>
-    <script src="js/reveal.js"></script>
-
-    <script>
-        // More info about config & dependencies:
-        // - https://github.com/hakimel/reveal.js#configuration
-        // - https://github.com/hakimel/reveal.js#dependencies
-        Reveal.initialize();
-    </script>
 </body>
 
 </html>

@@ -51,6 +51,9 @@
 
     @media screen and (max-width: 480px) {
 
+        /*----------------------------------------
+         * 共通DOM
+         *----------------------------------------*/
         html, body {
             margin: 0 -30px;
         }
@@ -59,6 +62,7 @@
          * コンテナ部分基底
          *----------------------------------------*/
         .main_container .audio_content .content_bar {
+            display: -webkit-flex;
             width: 80%;
             font-size: 1.4em;
             padding: 0 24px;
