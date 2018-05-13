@@ -13,6 +13,10 @@ router.get('/', (req, res, next) => {
     res.render('index')
 })
 
+router.get('/test', (req, res) => {
+    res.render('test')
+})
+
 router.post('/content', (req, res) => {
     MongoClient.connect(url, (e, c) => {
         assert.ifError(e)
