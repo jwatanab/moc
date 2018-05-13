@@ -49,6 +49,9 @@ export default class Main extends React.Component {
                     else if (position - getPosition(e) < -level) direction = 'right'
                 })
                 i.addEventListener('touchend', (e) => {
+                    /**
+                     * スワイプで画像入れ替えを行う
+                     */
                     if (direction == 'right') return
 
                     else if (direction == 'left') return
@@ -68,6 +71,16 @@ export default class Main extends React.Component {
         }
     }
 
+    phone_click(e) {
+        const audio = e.target.parentElement.querySelector('audio')
+
+        console.log(audio)
+
+        alert('touch')
+        audio.load()
+        audio.play()
+    }
+
     operation_ui(e, recession = null) {
         // Each declaration
         const parentId = e.target.className === 'img_content' ? e.target.id : e.target.parentElement.id
@@ -76,6 +89,7 @@ export default class Main extends React.Component {
         const pause_btn = parent.querySelector('.p_test')
         const border = parent.querySelector('.border_bg')
         const audio = parent.querySelector('.notificationTone')
+        const phone_btn = parent.parentElement.querySelector('.phone_toggle')
 
         // Individual processing
         if (eval(`typeof this.state.${parentId}`) === 'undefined') {
@@ -85,48 +99,97 @@ export default class Main extends React.Component {
             }`)
         }
 
-        // It saves the music element
-        if (recession) {
-            if (typeof audio.src !== 'undifined') {
-                setTimeout(() => this.operation_audio(audio, false), 300)
+        if ((navigator.userAgent.indexOf('iPhone') > 0 && navigator.userAgent.indexOf('iPad') == -1) ||
+            navigator.userAgent.indexOf('iPod') > 0 || navigator.userAgent.indexOf('Android') > 0) {
+            console.log('スマホ')
+            // It saves the music element
+            if (recession) {
+                if (typeof audio.src !== 'undifined') {
+                    setTimeout(() => this.operation_audio_phone(audio, false, phone_btn), 300)
+                }
+                border.style.opacity = '0'
+                return eval(`this.state.${parentId}.ui_touch_flag = false`)
             }
-            border.style.opacity = '0'
-            return eval(`this.state.${parentId}.ui_touch_flag = false`)
-        }
 
-        // Event Handler processing
-        if (eval(`this.state.${parentId}.ui_touch_flag`)) {
-            pause_btn.style.opacity = '1'
-            this.operation_audio(audio, false)
+            // Event Handler processing
+            if (eval(`this.state.${parentId}.ui_touch_flag`)) {
+                pause_btn.style.opacity = '1'
+                this.operation_audio_phone(audio, false, phone_btn)
 
-            setTimeout(() => {
-                pause_btn.style.transition = '.7s'
-                pause_btn.style.opacity = '0'
+                setTimeout(() => {
+                    pause_btn.style.transition = '.7s'
+                    pause_btn.style.opacity = '0'
 
-                setTimeout(() => pause_btn.setAttribute('style', 'opacity: 0;'), 300)
-            }, 100)
-            border.style.opacity = '0'
+                    setTimeout(() => pause_btn.setAttribute('style', 'opacity: 0;'), 300)
+                }, 100)
+                border.style.opacity = '0'
 
-            eval(`this.state.${parentId}.ui_touch_flag = false`)
-        } else {
-            // init Event Handler
-            if (eval(`this.state.${parentId}.operation_flag`)) {
-                play_btn.style.opacity = '1'
-                this.operation_audio(audio, true)
+                eval(`this.state.${parentId}.ui_touch_flag = false`)
             } else {
-                this.operation_audio(audio, true, true)
-                eval(`this.state.${parentId}.operation_flag = true`)
+                // init Event Handler
+                if (eval(`this.state.${parentId}.operation_flag`)) {
+                    play_btn.style.opacity = '1'
+                    this.operation_audio_phone(audio, true, phone_btn)
+                } else {
+                    this.operation_audio_phone(audio, true, phone_btn, true)
+                    eval(`this.state.${parentId}.operation_flag = true`)
+                }
+
+                setTimeout(() => {
+                    play_btn.style.transition = '.7s'
+                    play_btn.style.opacity = '0'
+
+                    setTimeout(() => play_btn.setAttribute('style', 'opacity: 0;'), 300)
+                }, 100)
+                border.style.opacity = '1'
+
+                eval(`this.state.${parentId}.ui_touch_flag = true`)
+            }
+        } else {
+            console.log('PC')
+            // It saves the music element
+            if (recession) {
+                if (typeof audio.src !== 'undifined') {
+                    setTimeout(() => this.operation_audio(audio, false), 300)
+                }
+                border.style.opacity = '0'
+                return eval(`this.state.${parentId}.ui_touch_flag = false`)
             }
 
-            setTimeout(() => {
-                play_btn.style.transition = '.7s'
-                play_btn.style.opacity = '0'
+            // Event Handler processing
+            if (eval(`this.state.${parentId}.ui_touch_flag`)) {
+                pause_btn.style.opacity = '1'
+                this.operation_audio(audio, false)
 
-                setTimeout(() => play_btn.setAttribute('style', 'opacity: 0;'), 300)
-            }, 100)
-            border.style.opacity = '1'
+                setTimeout(() => {
+                    pause_btn.style.transition = '.7s'
+                    pause_btn.style.opacity = '0'
 
-            eval(`this.state.${parentId}.ui_touch_flag = true`)
+                    setTimeout(() => pause_btn.setAttribute('style', 'opacity: 0;'), 300)
+                }, 100)
+                border.style.opacity = '0'
+
+                eval(`this.state.${parentId}.ui_touch_flag = false`)
+            } else {
+                // init Event Handler
+                if (eval(`this.state.${parentId}.operation_flag`)) {
+                    play_btn.style.opacity = '1'
+                    this.operation_audio(audio, true)
+                } else {
+                    this.operation_audio(audio, true, true)
+                    eval(`this.state.${parentId}.operation_flag = true`)
+                }
+
+                setTimeout(() => {
+                    play_btn.style.transition = '.7s'
+                    play_btn.style.opacity = '0'
+
+                    setTimeout(() => play_btn.setAttribute('style', 'opacity: 0;'), 300)
+                }, 100)
+                border.style.opacity = '1'
+
+                eval(`this.state.${parentId}.ui_touch_flag = true`)
+            }
         }
     }
 
@@ -148,6 +211,27 @@ export default class Main extends React.Component {
             }
             else if (typeof ope === 'undifined') return
             else if (!operation) audio.parentElement.pause()
+        }
+    }
+
+    operation_audio_phone(audio, operation, phone_btn, option = null) {
+        if (!audio) throw new Error(`DOMException: audio is ${typeof audio}`)
+        if (option) {
+            this.src_gen(audio.id)
+                .then((result) => {
+                    audio.src = result
+                    audio.parentElement.load()
+                    return phone_btn.click()
+                })
+                .catch((e) => {
+                    throw new Error(e)
+                })
+        } else {
+            if (operation) {
+                phone_btn.click()
+            }
+            else if (typeof ope === 'undifined') return
+            else if (!operation) phone_btn.click()
         }
     }
 
@@ -194,7 +278,7 @@ export default class Main extends React.Component {
                             </div>
                         </div>
                     </div> */}{/* content_bar */}
-                {/*</div>*/} {/* audio_content */}
+                {/*</div> {/* audio_content */}
                 <div className="audio_content">
                     <div className="content_bar">
                         <div className="touch_ui">
@@ -207,6 +291,7 @@ export default class Main extends React.Component {
                                     <source className="notificationTone" id="./Down.m4a" />
                                 </audio>
                             </div>
+                            <span className="phone_toggle" onClick={(e) => this.phone_click(e)}></span>
                             <div className="ui_content">
                                 <span className="content_name">Wouldn't Wanna Be Swept Away</span>
                             </div>
