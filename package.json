@@ -43,6 +43,7 @@
         "babel-loader": "^7.1.4",
         "babel-register": "^6.26.0",
         "npm-run-all": "^4.1.2",
+        "react-slick": "^0.23.1",
         "superagent": "^3.8.2",
         "webpack": "^4.6.0",
         "webpack-cli": "^2.0.14"

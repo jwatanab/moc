@@ -33,19 +33,7 @@ export default class Ui_Bar extends React.Component {
 
     render() {
         return (
-            <div>
-                <VelocityTransitionGroup
-                    runOnMount={false}
-                    enter={{
-                        animation: 'fadeIn',
-                        stagger: 1000,
-                    }}
-                    leave={{
-                        animation: 'fadeOut',
-                        stagger: 1000,
-                    }}>
-                </VelocityTransitionGroup >
-            </div>
+            <div></div>
         )
     }
 }

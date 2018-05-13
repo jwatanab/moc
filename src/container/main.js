@@ -15,7 +15,7 @@ export default class Main extends React.Component {
         }
     }
 
-    componentDidMount() {
+    componentWillMount() {
         // Init Image Front
         Array.from(document.querySelectorAll('.img'))
             .map(i => {
