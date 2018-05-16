@@ -24,6 +24,9 @@
 
     .production {
         position: relative;
+        top: 0;
+        left: 0;
+        transition: .7s;
         margin: 0 auto;
         display: block;
         font-size: 1.4em;
@@ -73,9 +76,10 @@
         nodeList.isProduction = document.querySelectorAll('.production') //画像配置DOM
 
         Array.from(nodeList.isProduction).map(i => {
-
             i.onclick = () => {
                 const bg = i.querySelector('.production_bg')
+                i.style.left = '400px'
+                i.style.opacity = '0'
                 if (bg.style.opacity === '')
                     bg.style.opacity = '1'
                 else if (bg.style.opacity === '0')

@@ -57,6 +57,20 @@ export default class Main extends React.Component {
                     else if (direction == 'left') return
                 })
             })
+
+        Array.from(document.querySelectorAll('.phone_toggle'))
+            .map(i => {
+                i.addEventListener('click', (e) => {
+                    const audio = e.target.parentElement.querySelector('audio')
+
+                    console.log(audio)
+
+                    alert('touch')
+                    audio.load()
+                    audio.play()
+                })
+            })
+
         // Init AudioElement EventHandler
         for (let j = 0; j < audio_list.length; j++) {
             audio_list[j].addEventListener('play', (e) => {
@@ -69,16 +83,6 @@ export default class Main extends React.Component {
                 this.operation_ui({ target: audio_list[j] }, true)
             })
         }
-    }
-
-    phone_click(e) {
-        const audio = e.target.parentElement.querySelector('audio')
-
-        console.log(audio)
-
-        alert('touch')
-        audio.load()
-        audio.play()
     }
 
     operation_ui(e, recession = null) {
@@ -291,7 +295,7 @@ export default class Main extends React.Component {
                                     <source className="notificationTone" id="./Down.m4a" />
                                 </audio>
                             </div>
-                            <span className="phone_toggle" onClick={(e) => this.phone_click(e)}></span>
+                            <span className="phone_toggle"/* onClick={(e) => this.phone_click(e)}*/></span>
                             <div className="ui_content">
                                 <span className="content_name">Wouldn't Wanna Be Swept Away</span>
                             </div>
