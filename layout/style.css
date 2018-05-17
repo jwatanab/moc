@@ -68,8 +68,8 @@
             display: block;
             margin: 50px auto;
             font-size: 1.4em;
-            height: 250px;
-            width: 250px;
+            height: 300px;
+            width: 300px;
         }
         
         .img_content .border_bg {
@@ -109,5 +109,9 @@
         .main_container .audio_content .description_content {
             text-align: center;
             margin: 0 auto;
+        }
+
+        .production_sub {
+
         }
     }

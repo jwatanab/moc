@@ -19,10 +19,33 @@
     }
 
     /*----------------------------------------
+     * 基底クラス
+     *----------------------------------------*/
+
+    main {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /*----------------------------------------
      * 本番テスト
      *----------------------------------------*/
 
     .production {
+        position: relative;
+        top: 0;
+        left: 0;
+        transition: .7s;
+        margin: 0 auto;
+        display: block;
+        font-size: 1.4em;
+        width: 300px;
+        height: 300px;
+        margin: 50px 20px;
+    }
+
+    .production_sub {
         position: relative;
         top: 0;
         left: 0;
@@ -60,34 +83,74 @@
         -moz-border-radius: 9.3%;
         -webkit-border-radius: 9.3%;
     }
+
+    .none {
+        display: none;
+    }
 </style>
 
 <body>
-    <div class="production">
-        <div class="production_bg"></div>
-        <img class="production_img" src="../../static/black.png" alt="test"></img>
-    </div>
+    <header style="font-size: 1.8em;">
+        Moc1.1
+    </header>
+    <main>
+        <div class="production">
+            <div class="production_bg"></div>
+            <img class="production_img" src="../../static/out_world" alt="test"></img>
+        </div>
+        <div class="production none">
+            <div class="production_bg"></div>
+            <img class="production_img" src="../../static/wolud" alt="test"></img>
+        </div>
+    </main>
+    <main>
+        <div class="desc" style="font-size: 1.4em; transition: .7s;">list - est</div>
+    </main>
 </body>
 
 <script>
     window.onload = () => {
-        let nodeList = {}
+        const production = document.querySelectorAll('.production') //画像配置DOM
+        const noneObj = document.querySelector('.none')
+        const innerText = document.querySelector('.desc')
 
-        nodeList.isProduction = document.querySelectorAll('.production') //画像配置DOM
-
-        Array.from(nodeList.isProduction).map(i => {
+        Array.from(production).map(i => {
             i.onclick = () => {
-                const bg = i.querySelector('.production_bg')
-                i.style.left = '400px'
-                i.style.opacity = '0'
-                if (bg.style.opacity === '')
-                    bg.style.opacity = '1'
-                else if (bg.style.opacity === '0')
-                    bg.style.opacity = '1'
-                else if (bg.style.opacity === '1')
-                    bg.style.opacity = '0'
-                else
-                    return false
+                let direction,
+                    position,
+                    level = 30
+
+
+                i.addEventListener('touchstart', (e) => {
+                    position = e.touches[0].pageX
+                    direction = ''
+                }, { passive: false })
+
+                i.addEventListener('touchmove', (e) => {
+                    if (position - e.touches[0].pageX > level) direction = 'left'
+                    else if (position - e.touches[0].pageX < -level) direction = 'right'
+                }, { passive: false })
+
+                i.addEventListener('touchend', (e) => {
+                    if (direction == 'right') {
+                        i.style.left = '400px'
+                        i.style.opacity = '0'
+                        setTimeout(() => {
+                            i.style.display = 'none'
+                            noneObj.style.opacity = '0'
+                            innerText.innerHTML = `Wouldn't Wanna Be Swept Away`
+                            setTimeout(() => {
+                                noneObj.style.display = 'block'
+                                noneObj.style.left = '-400px'
+                                setTimeout(() => {
+                                    noneObj.style.opacity = '1'
+                                    noneObj.style.left = '0'
+                                }, 100)
+                            })
+                        }, 500)
+                    }
+                    else if (direction == 'left') return
+                }, { passive: false })
             }
         })
     }
