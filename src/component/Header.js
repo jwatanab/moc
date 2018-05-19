@@ -5,6 +5,7 @@ export default class Header extends React.Component {
         super(props)
         this.state = {}
     }
+
     render() {
         return (
             <header className="header_container">

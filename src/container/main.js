@@ -2,6 +2,7 @@ import React from 'react'
 import assert, { throws } from 'assert'
 import request from 'superagent'
 import Rcslider from 'rc-slider'
+import { Responsive } from '../component/index'
 import CSSTransitionGroup from 'react-addons-transition-group'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import { VelocityTransitionGroup } from 'velocity-react'
@@ -17,6 +18,10 @@ export default class Main extends React.Component {
     componentDidMount() {
         const audio_list = document.querySelectorAll('audio')
         const level = 50
+
+        //const test = new Responsive
+
+        console.log(Responsive)
 
         // Init Image Front
         Array.from(document.querySelectorAll('.img'))
@@ -44,17 +49,20 @@ export default class Main extends React.Component {
                     position = getPosition(e)
                     direction = ''
                 })
-                i.addEventListener('touchmove', (e) => {
-                    if (position - getPosition(e) > level) direction = 'left'
-                    else if (position - getPosition(e) < -level) direction = 'right'
-                })
-                i.addEventListener('touchend', (e) => {
-                    /**
-                     * スワイプで画像入れ替えを行う
-                     */
-                    if (direction == 'right') return
 
-                    else if (direction == 'left') return
+                i.addEventListener('touchmove', (e) => {
+                    if (position - getPosition(e) > level) return direction = 'left'
+                    if (position - getPosition(e) < -level) return direction = 'right'
+                })
+
+                i.addEventListener('touchend', (e) => {
+                    if (direction == 'right') {
+                        console.log("right")
+                    } else if (direction == 'left') {
+                        console.log('left')
+                    } else {
+                        console.log('else')
+                    }
                 })
             })
 
@@ -103,13 +111,11 @@ export default class Main extends React.Component {
             }`)
         }
 
-        if ((navigator.userAgent.indexOf('iPhone') > 0 && navigator.userAgent.indexOf('iPad') == -1) ||
-            navigator.userAgent.indexOf('iPod') > 0 || navigator.userAgent.indexOf('Android') > 0) {
-            console.log('スマホ')
+        if (Response.toSupport()) {
             // It saves the music element
             if (recession) {
                 if (typeof audio.src !== 'undifined') {
-                    setTimeout(() => this.operation_audio_phone(audio, false, phone_btn), 300)
+                    setTimeout(() => Responsive.operation_audio(audio, false, phone_btn), 300)
                 }
                 border.style.opacity = '0'
                 return eval(`this.state.${parentId}.ui_touch_flag = false`)
@@ -118,7 +124,7 @@ export default class Main extends React.Component {
             // Event Handler processing
             if (eval(`this.state.${parentId}.ui_touch_flag`)) {
                 pause_btn.style.opacity = '1'
-                this.operation_audio_phone(audio, false, phone_btn)
+                Responsive.operation_audio(audio, false, phone_btn)
 
                 setTimeout(() => {
                     pause_btn.style.transition = '.7s'
@@ -133,9 +139,9 @@ export default class Main extends React.Component {
                 // init Event Handler
                 if (eval(`this.state.${parentId}.operation_flag`)) {
                     play_btn.style.opacity = '1'
-                    this.operation_audio_phone(audio, true, phone_btn)
+                    Responsive.operation_audio(audio, true, phone_btn)
                 } else {
-                    this.operation_audio_phone(audio, true, phone_btn, true)
+                    Responsive.operation_audio(audio, true, phone_btn, true)
                     eval(`this.state.${parentId}.operation_flag = true`)
                 }
 
@@ -150,7 +156,6 @@ export default class Main extends React.Component {
                 eval(`this.state.${parentId}.ui_touch_flag = true`)
             }
         } else {
-            console.log('PC')
             // It saves the music element
             if (recession) {
                 if (typeof audio.src !== 'undifined') {
@@ -218,27 +223,6 @@ export default class Main extends React.Component {
         }
     }
 
-    operation_audio_phone(audio, operation, phone_btn, option = null) {
-        if (!audio) throw new Error(`DOMException: audio is ${typeof audio}`)
-        if (option) {
-            this.src_gen(audio.id)
-                .then((result) => {
-                    audio.src = result
-                    audio.parentElement.load()
-                    return phone_btn.click()
-                })
-                .catch((e) => {
-                    throw new Error(e)
-                })
-        } else {
-            if (operation) {
-                phone_btn.click()
-            }
-            else if (typeof ope === 'undifined') return
-            else if (!operation) phone_btn.click()
-        }
-    }
-
     src_gen(request_name) {
         if (request_name === "Serato_Recording") request_name = `${request_name}.m4a`
         return new Promise((resolve, reject) => {
@@ -295,7 +279,7 @@ export default class Main extends React.Component {
                                     <source className="notificationTone" id="./Down.m4a" />
                                 </audio>
                             </div>
-                            <span className="phone_toggle"/* onClick={(e) => this.phone_click(e)}*/></span>
+                            <span className="phone_toggle" onClick={(e) => this.phone_click(e)}></span>
                             <div className="ui_content">
                                 <span className="content_name">Wouldn't Wanna Be Swept Away</span>
                             </div>
