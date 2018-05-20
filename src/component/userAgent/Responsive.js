@@ -2,9 +2,6 @@ import React from 'react'
 import { Client } from '../commonUtil/index'
 import assert, { throws } from 'assert'
 
-/** 
- * @author スマホ、タブレットユーザ ユーティリティクラス
- */
 export default class Responsive {
     constructor() { }
 

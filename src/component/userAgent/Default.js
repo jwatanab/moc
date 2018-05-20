@@ -1,9 +1,6 @@
 import { Client } from '../commonUtil/index'
 import assert, { throws } from 'assert'
 
-/**
- * @author PCユーザ ユーティリティクラス
- */
 export default class Default {
     constructor() { }
 

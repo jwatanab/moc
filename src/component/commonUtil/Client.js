@@ -1,17 +1,9 @@
 import request from 'superagent'
 import assert, { throws } from 'assert'
 
-/** 
- * @author リクエスト クライエントクラス
- */
 export default class Client {
     constructor() { }
 
-    /**
-     * @param {String} request_name http query
-     * @param {String} request_url  request path
-     * @param {String} content_type response type
-     */
     src_gen(request_name) {
         if (request_name === "Serato_Recording") request_name = `${request_name}.m4a`
         return new Promise((resolve, reject) => {
