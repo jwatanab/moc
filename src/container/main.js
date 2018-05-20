@@ -71,7 +71,6 @@ export default class Main extends React.Component {
                     const innerText = document.querySelector('.content_name')
                     const currentId = parseInt(parent.dataset.index)
                     if (direction == 'right') {
-                        console.log('右すら', this_length, currentId)
                         if (currentId === this_length) return alert('最大件数')
 
                         const next = document.querySelector(`[data-index="${currentId + 1}"]`)
@@ -97,7 +96,6 @@ export default class Main extends React.Component {
                             })
                         }, 500)
                     } else if (direction == 'left') {
-                        console.log('左すら')
                         if (currentId === 0) return alert("零")
 
                         const next = document.querySelector(`[data-index="${currentId - 1}"]`)
