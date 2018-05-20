@@ -40,8 +40,11 @@ export default class Main extends React.Component {
 
                 const img_content = i.querySelector('.img_content')
                 const this_length = (document.querySelectorAll('.audio_content').length - 1)
+
+                /*
                 const last_parant_element = document.querySelectorAll('.audio_content')[this_length]
                 const last_element = last_parant_element.querySelector('.img_content')
+                */
 
                 let direction, position, defaultClassName
 
@@ -66,46 +69,38 @@ export default class Main extends React.Component {
                     const parentId = e.target.className === 'img_content' ? e.target.id : e.target.parentElement.id
                     const parent = document.querySelector(`#${parentId}`)
                     const innerText = document.querySelector('.content_name')
-                    const nextId = parseInt(parent.dataset.index)
-                    const next = document.querySelector(`[data-index="${nextId - 1}"]`)
+                    const currentId = parseInt(parent.dataset.index)
                     if (direction == 'right') {
-                        if (nextId === 0) {
-                            parent.style.opacity = '0'
-                            parent.style.left = '400px'
+                        console.log('右すら')
+                        const next = document.querySelector(`[data-index="${currentId + 1}"]`)
+                        const next_parent = next.closest('.audio_content')
+                        if (currentId === this_length) return alert('最大件数')
+
+
+                        // スライド発生 -> 画像スライド -> 画像 && 親消す -> シフトする画像 && シフト親を存在させる -> シフト画像をスライド
+
+                        parent.style.opacity = '0'
+                        parent.style.left = '400px'
+                        setTimeout(() => {
+                            i.style.display = 'none'
+                            parent.display = 'none'
+
+                            next.style.opacity = '0'
+                            next_parent.className = 'audio_content block'
+                            innerText.innerHTML = 'test'
                             setTimeout(() => {
-                                last_element.style.opacity = '0'
-                                i.style.display = 'none'
-                                parent.style.display = 'none'
-                                innerText.innerHTML = 'test'
+                                next.style.display = 'block'
+                                next.style.left = '-400px'
                                 setTimeout(() => {
-                                    last_parant_element.className = `audio_content block`
-                                    last_element.style.display = 'block'
-                                    last_element.style.left = '-400px'
-                                    setTimeout(() => {
-                                        last_element.style.opacity = '1'
-                                        last_element.style.left = '0'
-                                    }, 100)
-                                })
-                            }, 500)
-                        } else {
-                            parent.style.opacity = '0'
-                            parent.style.left = '400px'
-                            setTimeout(() => {
-                                next.style.opacity = '0'
-                                parent.display = 'none'
-                                innerText.innerHTML = 'test'
-                                setTimeout(() => {
-                                    next.style.display = 'block'
-                                    next.style.left = '-400px'
-                                    setTimeout(() => {
-                                        next.style.opacity = '1'
-                                        next.style.left = '0px'
-                                    }, 100)
-                                })
-                            }, 500)
-                        }
+                                    next.style.opacity = '1'
+                                    next.style.left = '0px'
+                                }, 100)
+                            })
+                        }, 500)
                     } else if (direction == 'left') {
-                        console.log(e.target)
+                        console.log('左すら')
+                        const next = document.querySelector(`[data-index="${currentId - 1}"]`)
+                        if (currentId === 0) return alert("零")
                     } else {
                         console.log(e.target)
                     }
@@ -123,6 +118,28 @@ export default class Main extends React.Component {
             audio_list[j].addEventListener('ended', (e) => {
                 this.operation_ui({ target: audio_list[j] }, true)
             })
+        }
+    }
+
+    operation_select() {
+        if (nextId === 0) {
+            parent.style.opacity = '0'
+            parent.style.left = '400px'
+            setTimeout(() => {
+                last_element.style.opacity = '0'
+                i.style.display = 'none'
+                parent.style.display = 'none'
+                innerText.innerHTML = 'test'
+                setTimeout(() => {
+                    last_parant_element.className = `audio_content block`
+                    last_element.style.display = 'block'
+                    last_element.style.left = '-400px'
+                    setTimeout(() => {
+                        last_element.style.opacity = '1'
+                        last_element.style.left = '0'
+                    }, 100)
+                })
+            }, 500)
         }
     }
 
