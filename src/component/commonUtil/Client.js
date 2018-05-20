@@ -2,7 +2,7 @@ import request from 'superagent'
 import assert, { throws } from 'assert'
 
 /** 
- * @author バックエンド通信を行う
+ * @author リクエスト クライエントクラス
  */
 export default class Client {
     constructor() { }

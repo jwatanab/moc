@@ -1,7 +1,7 @@
-import { Client } from './util/index'
+import { Client } from '../commonUtil/index'
 
 /**
- * @author PC接続ユーザに対してユーティリティ関数を提供します
+ * @author PCユーザ ユーティリティクラス
  */
 export default class Default {
     constructor() { }
