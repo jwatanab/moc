@@ -2,7 +2,7 @@ import React from 'react'
 import assert, { throws } from 'assert'
 import request from 'superagent'
 import Rcslider from 'rc-slider'
-import { Responsive } from '../component/index'
+import { Responsive, Default } from '../component/index'
 import CSSTransitionGroup from 'react-addons-transition-group'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import { VelocityTransitionGroup } from 'velocity-react'
@@ -18,10 +18,6 @@ export default class Main extends React.Component {
     componentDidMount() {
         const audio_list = document.querySelectorAll('audio')
         const level = 50
-
-        //const test = new Responsive
-
-        console.log(Responsive)
 
         // Init Image Front
         Array.from(document.querySelectorAll('.img'))
@@ -84,11 +80,11 @@ export default class Main extends React.Component {
             audio_list[j].addEventListener('play', (e) => {
                 for (let i = 0; i < audio_list.length; i++)
                     if (audio_list[i] !== e.target)
-                        this.operation_ui({ target: audio_list[i] }, true)
+                        Default.operation_ui({ target: audio_list[i] }, true)
             })
 
             audio_list[j].addEventListener('ended', (e) => {
-                this.operation_ui({ target: audio_list[j] }, true)
+                Default.operation_ui({ target: audio_list[j] }, true)
             })
         }
     }
@@ -111,7 +107,7 @@ export default class Main extends React.Component {
             }`)
         }
 
-        if (Response.toSupport()) {
+        if (Responsive.toSupport()) {
             // It saves the music element
             if (recession) {
                 if (typeof audio.src !== 'undifined') {
@@ -159,7 +155,7 @@ export default class Main extends React.Component {
             // It saves the music element
             if (recession) {
                 if (typeof audio.src !== 'undifined') {
-                    setTimeout(() => this.operation_audio(audio, false), 300)
+                    setTimeout(() => Default.operation_audio(audio, false), 300)
                 }
                 border.style.opacity = '0'
                 return eval(`this.state.${parentId}.ui_touch_flag = false`)
@@ -168,7 +164,7 @@ export default class Main extends React.Component {
             // Event Handler processing
             if (eval(`this.state.${parentId}.ui_touch_flag`)) {
                 pause_btn.style.opacity = '1'
-                this.operation_audio(audio, false)
+                Default.operation_audio(audio, false)
 
                 setTimeout(() => {
                     pause_btn.style.transition = '.7s'
@@ -183,9 +179,9 @@ export default class Main extends React.Component {
                 // init Event Handler
                 if (eval(`this.state.${parentId}.operation_flag`)) {
                     play_btn.style.opacity = '1'
-                    this.operation_audio(audio, true)
+                    Default.operation_audio(audio, true)
                 } else {
-                    this.operation_audio(audio, true, true)
+                    Default.operation_audio(audio, true, true)
                     eval(`this.state.${parentId}.operation_flag = true`)
                 }
 
@@ -200,43 +196,6 @@ export default class Main extends React.Component {
                 eval(`this.state.${parentId}.ui_touch_flag = true`)
             }
         }
-    }
-
-    operation_audio(audio, operation, option = null) {
-        if (!audio) throw new Error(`DOMException: audio is ${typeof audio}`)
-        if (option) {
-            this.src_gen(audio.id)
-                .then((result) => {
-                    audio.src = result
-                    audio.parentElement.load()
-                    return audio.parentElement.play()
-                })
-                .catch((e) => {
-                    throw new Error(e)
-                })
-        } else {
-            if (operation) {
-                audio.parentElement.play()
-            }
-            else if (typeof ope === 'undifined') return
-            else if (!operation) audio.parentElement.pause()
-        }
-    }
-
-    src_gen(request_name) {
-        if (request_name === "Serato_Recording") request_name = `${request_name}.m4a`
-        return new Promise((resolve, reject) => {
-            request.post('/content')
-                .responseType('arraybuffer')
-                .query({ filename: request_name })
-                .send(null)
-                .end((err, res) => {
-                    assert.ifError(err)
-                    const blob = new Blob([res.body], { type: 'audio/mpeg3' })
-                    const url = URL.createObjectURL(blob)
-                    resolve(url)
-                })
-        })
     }
 
     render() {

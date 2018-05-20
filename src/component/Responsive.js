@@ -1,4 +1,5 @@
 import React from 'react'
+import { Client } from './util/index'
 import assert, { throws } from 'assert'
 
 export default class Responsive {
@@ -7,7 +8,7 @@ export default class Responsive {
     operation_audio(audio, operation, phone_btn, option = null) {
         if (!audio) throw new Error(`DOMException: audio is ${typeof audio}`)
         if (option) {
-            this.src_gen(audio.id)
+            Client.src_gen(audio.id)
                 .then((result) => {
                     audio.src = result
                     audio.parentElement.load()
