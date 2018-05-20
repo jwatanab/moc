@@ -71,13 +71,11 @@ export default class Main extends React.Component {
                     const innerText = document.querySelector('.content_name')
                     const currentId = parseInt(parent.dataset.index)
                     if (direction == 'right') {
-                        console.log('右すら')
-                        const next = document.querySelector(`[data-index="${currentId + 1}"]`)
-                        const next_parent = next.closest('.audio_content')
+                        console.log('右すら', this_length, currentId)
                         if (currentId === this_length) return alert('最大件数')
 
-
-                        // スライド発生 -> 画像スライド -> 画像 && 親消す -> シフトする画像 && シフト親を存在させる -> シフト画像をスライド
+                        const next = document.querySelector(`[data-index="${currentId + 1}"]`)
+                        const next_parent = next.closest('.audio_content')
 
                         parent.style.opacity = '0'
                         parent.style.left = '400px'
@@ -87,6 +85,7 @@ export default class Main extends React.Component {
 
                             next.style.opacity = '0'
                             next_parent.className = 'audio_content block'
+                            next_parent.style.display = 'block'
                             innerText.innerHTML = 'test'
                             setTimeout(() => {
                                 next.style.display = 'block'
@@ -99,8 +98,31 @@ export default class Main extends React.Component {
                         }, 500)
                     } else if (direction == 'left') {
                         console.log('左すら')
-                        const next = document.querySelector(`[data-index="${currentId - 1}"]`)
                         if (currentId === 0) return alert("零")
+
+                        const next = document.querySelector(`[data-index="${currentId - 1}"]`)
+                        const next_parent = next.closest('.audio_content')
+
+                        parent.style.opacity = '0'
+                        parent.style.left = '-400px'
+                        setTimeout(() => {
+                            i.style.display = 'none'
+                            parent.display = 'none'
+
+                            next.style.opacity = '0'
+                            next_parent.className = 'audio_content block'
+                            next_parent.style.display = 'block'
+                            innerText.innerHTML = 'test'
+                            setTimeout(() => {
+                                next.style.display = 'block'
+                                next.style.left = '400px'
+                                setTimeout(() => {
+                                    console.log(next_parent)
+                                    next.style.opacity = '1'
+                                    next.style.left = '0px'
+                                }, 100)
+                            })
+                        }, 500)
                     } else {
                         console.log(e.target)
                     }
