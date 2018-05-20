@@ -17,9 +17,7 @@ export default class Responsive {
                     audio.parentElement.load()
                     return phone_btn.click()
                 })
-                .catch((e) => {
-                    throw new Error(e)
-                })
+                .catch((e) => assert.ifError(e))
         } else {
             if (operation) {
                 phone_btn.click()

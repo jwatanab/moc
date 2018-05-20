@@ -25,7 +25,7 @@
     nav,
     main,
     footer {
-        padding: 50px 50px 20px;
+        padding: 50px 50px 0px;
     }
     
     /*----------------------------------------
@@ -54,15 +54,40 @@
         /*----------------------------------------
          * 共通DOM
          *----------------------------------------*/
-        html, body {
+        header {
             margin: 0 -30px;
+        }
+         /*----------------------------------------
+         * スライド部分
+         *----------------------------------------*/
+        .media_content {
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /*----------------------------------------
+         * 非要素クラス
+         *----------------------------------------*/
+        .none {
+            display: none;
+            opacity: 0;
+        }
+
+        /*----------------------------------------
+         * 要素クラス
+         *----------------------------------------*/
+        .block {
+            display: block;
+            opacity: 1;
         }
 
         /*----------------------------------------
          * コンテナ部分基底
          *----------------------------------------*/
         .main_container .audio_content .content_bar {
-            display: -webkit-flex;
+            display: flex;
             width: 80%;
             font-size: 1.4em;
             padding: 0 24px;
@@ -82,6 +107,9 @@
          *----------------------------------------*/
         .img_content {
             position: relative;
+            top: 0;
+            left: 0;
+            transition: .7s;
             display: block;
             margin: 0 auto;
             font-size: 1.4em;
@@ -91,6 +119,7 @@
 
         .img_content .border_bg {
             position: absolute;
+            transition: .7s;
             opacity: 0;
             width: 102%;
             height: 102%;
@@ -103,6 +132,7 @@
 
         .img_content .img {
             position: absolute;
+            transition: .7s;
             top: 1%;
             left: 1%;
             vertical-align: bottom;
@@ -225,5 +255,16 @@
             margin: 0 auto;
             border-radius: 10px;
             box-shadow: 1px 1px 2px #dee7ec;
+        }
+
+        /*----------------------------------------
+         * モーダル部分
+         *----------------------------------------*/
+        .main_container .ui_content {
+            padding: 22px 5px;
+            font-size: 1.4em;
+            overflow: hidden;
+            display: block;
+            text-align: center;
         }
     }

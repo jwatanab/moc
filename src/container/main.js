@@ -2,7 +2,7 @@ import React from 'react'
 import assert, { throws } from 'assert'
 import request from 'superagent'
 import Rcslider from 'rc-slider'
-import { Responsive, Default } from '../component/index'
+import { Responsive, Default } from '../component/userAgent/index'
 import CSSTransitionGroup from 'react-addons-transition-group'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import { VelocityTransitionGroup } from 'velocity-react'
@@ -36,43 +36,80 @@ export default class Main extends React.Component {
 
         // Init AudioElement TouchEventHandler
         Array.from(document.querySelectorAll('.audio_content'))
-            .map(i => {
-                let direction, position
+            .map((i, c) => {
 
-                const getPosition = (e) => { return e.touches[0].pageX }
+                const img_content = i.querySelector('.img_content')
+                const this_length = (document.querySelectorAll('.audio_content').length - 1)
+                const last_parant_element = document.querySelectorAll('.audio_content')[this_length]
+                const last_element = last_parant_element.querySelector('.img_content')
 
-                i.addEventListener('touchstart', (e) => {
-                    position = getPosition(e)
+                let direction, position, defaultClassName
+
+                img_content.dataset.index = c
+
+                if (c !== 0) {
+                    defaultClassName = i.getAttribute('class')
+                    i.className = `${defaultClassName} none`
+                }
+
+                img_content.addEventListener('touchstart', (e) => {
+                    position = e.touches[0].pageX
                     direction = ''
-                })
+                }, { passive: false })
 
-                i.addEventListener('touchmove', (e) => {
-                    if (position - getPosition(e) > level) return direction = 'left'
-                    if (position - getPosition(e) < -level) return direction = 'right'
-                })
+                img_content.addEventListener('touchmove', (e) => {
+                    if (position - e.touches[0].pageX > level) return direction = 'left'
+                    if (position - e.touches[0].pageX < -level) return direction = 'right'
+                }, { passive: false })
 
-                i.addEventListener('touchend', (e) => {
+                img_content.addEventListener('touchend', (e) => {
+                    const parentId = e.target.className === 'img_content' ? e.target.id : e.target.parentElement.id
+                    const parent = document.querySelector(`#${parentId}`)
+                    const innerText = document.querySelector('.content_name')
+                    const nextId = parseInt(parent.dataset.index)
+                    const next = document.querySelector(`[data-index="${nextId - 1}"]`)
                     if (direction == 'right') {
-                        console.log("right")
+                        if (nextId === 0) {
+                            parent.style.opacity = '0'
+                            parent.style.left = '400px'
+                            setTimeout(() => {
+                                last_element.style.opacity = '0'
+                                i.style.display = 'none'
+                                parent.style.display = 'none'
+                                innerText.innerHTML = 'test'
+                                setTimeout(() => {
+                                    last_parant_element.className = `audio_content block`
+                                    last_element.style.display = 'block'
+                                    last_element.style.left = '-400px'
+                                    setTimeout(() => {
+                                        last_element.style.opacity = '1'
+                                        last_element.style.left = '0'
+                                    }, 100)
+                                })
+                            }, 500)
+                        } else {
+                            parent.style.opacity = '0'
+                            parent.style.left = '400px'
+                            setTimeout(() => {
+                                next.style.opacity = '0'
+                                parent.display = 'none'
+                                innerText.innerHTML = 'test'
+                                setTimeout(() => {
+                                    next.style.display = 'block'
+                                    next.style.left = '-400px'
+                                    setTimeout(() => {
+                                        next.style.opacity = '1'
+                                        next.style.left = '0px'
+                                    }, 100)
+                                })
+                            }, 500)
+                        }
                     } else if (direction == 'left') {
-                        console.log('left')
+                        console.log(e.target)
                     } else {
-                        console.log('else')
+                        console.log(e.target)
                     }
-                })
-            })
-
-        Array.from(document.querySelectorAll('.phone_toggle'))
-            .map(i => {
-                i.addEventListener('click', (e) => {
-                    const audio = e.target.parentElement.querySelector('audio')
-
-                    console.log(audio)
-
-                    alert('touch')
-                    audio.load()
-                    audio.play()
-                })
+                }, { passive: false })
             })
 
         // Init AudioElement EventHandler
@@ -80,11 +117,11 @@ export default class Main extends React.Component {
             audio_list[j].addEventListener('play', (e) => {
                 for (let i = 0; i < audio_list.length; i++)
                     if (audio_list[i] !== e.target)
-                        Default.operation_ui({ target: audio_list[i] }, true)
+                        this.operation_ui({ target: audio_list[i] }, true)
             })
 
             audio_list[j].addEventListener('ended', (e) => {
-                Default.operation_ui({ target: audio_list[j] }, true)
+                this.operation_ui({ target: audio_list[j] }, true)
             })
         }
     }
@@ -97,7 +134,6 @@ export default class Main extends React.Component {
         const pause_btn = parent.querySelector('.p_test')
         const border = parent.querySelector('.border_bg')
         const audio = parent.querySelector('.notificationTone')
-        const phone_btn = parent.parentElement.querySelector('.phone_toggle')
 
         // Individual processing
         if (eval(`typeof this.state.${parentId}`) === 'undefined') {
@@ -201,57 +237,41 @@ export default class Main extends React.Component {
     render() {
         return (
             <main className="main_container">
-                {/*<div className="audio_content">
-                    <div className="content_bar">
-                        <div className="touch_ui">
-                            <div className="img_content" id="node0" onClick={(e) => this.operation_ui(e)}>
-                                <div className="border_bg"></div>
-                                <img className="img" id="out_world"></img>
-                                <span className="test"></span>
-                                <span className="p_test"></span>
-                                <audio className="my_audio">
-                                    <source className="notificationTone" id="Serato_Recording" />
-                                </audio>
+                <div className="media_content">
+                    <div className="audio_content">
+                        <div className="content_bar">
+                            <div className="touch_ui">
+                                <div className="img_content" id="node1" onClick={(e) => this.operation_ui(e)}>
+                                    <div className="border_bg"></div>
+                                    <img className="img" id="wolud"></img>
+                                    <span className="test"></span>
+                                    <span className="p_test"></span>
+                                    <audio className="my_audio">
+                                        <source className="notificationTone" id="./Down.m4a" />
+                                    </audio>
+                                </div>
                             </div>
-                            <div className="ui_content">
-                                <span className="content_name">list - est</span>
+                        </div> {/* content_bar */}
+                    </div> {/* audio_content */}
+                    <div className="audio_content">
+                        <div className="content_bar">
+                            <div className="touch_ui">
+                                <div className="img_content" id="node0" onClick={(e) => this.operation_ui(e)}>
+                                    <div className="border_bg"></div>
+                                    <img className="img" id="out_world"></img>
+                                    <span className="test"></span>
+                                    <span className="p_test"></span>
+                                    <audio className="my_audio">
+                                        <source className="notificationTone" id="Serato_Recording" />
+                                    </audio>
+                                </div>
                             </div>
-                            <div className="description_content">
-                                <VelocityTransitionGroup runOnMount={false}
-                                    enter={{ animation: 'slideDown', stagger: 100 }}
-                                    leave={{ animation: 'slideUp', stagger: 100 }}>
-                                    {this.state.modal}
-                                </VelocityTransitionGroup>
-                            </div>
-                        </div>
-                    </div> */}{/* content_bar */}
-                {/*</div> {/* audio_content */}
-                <div className="audio_content">
-                    <div className="content_bar">
-                        <div className="touch_ui">
-                            <div className="img_content" id="node1" onClick={(e) => this.operation_ui(e)}>
-                                <div className="border_bg"></div>
-                                <img className="img" id="wolud"></img>
-                                <span className="test"></span>
-                                <span className="p_test"></span>
-                                <audio className="my_audio">
-                                    <source className="notificationTone" id="./Down.m4a" />
-                                </audio>
-                            </div>
-                            <span className="phone_toggle" onClick={(e) => this.phone_click(e)}></span>
-                            <div className="ui_content">
-                                <span className="content_name">Wouldn't Wanna Be Swept Away</span>
-                            </div>
-                            <div className="description_content">
-                                <VelocityTransitionGroup runOnMount={false}
-                                    enter={{ animation: 'slideDown', stagger: 100 }}
-                                    leave={{ animation: 'slideUp', stagger: 100 }}>
-                                    {this.state.modal}
-                                </VelocityTransitionGroup>
-                            </div>
-                        </div>
-                    </div> {/* content_bar */}
-                </div> {/* audio_content */}
+                        </div>{/* content_bar */}
+                    </div> {/* audio_content */}
+                </div>{/* media_content */}
+                <div className="ui_content">
+                    <span className="content_name">Wouldn't Wanna Be Swept Away</span>
+                </div>
             </main>
         )
     }

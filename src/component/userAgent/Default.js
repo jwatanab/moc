@@ -1,4 +1,5 @@
 import { Client } from '../commonUtil/index'
+import assert, { throws } from 'assert'
 
 /**
  * @author PCユーザ ユーティリティクラス
@@ -9,16 +10,13 @@ export default class Default {
     operation_audio(audio, operation, option = null) {
         if (!audio) throw new Error(`DOMException: audio is ${typeof audio}`)
         if (option) {
-            console.log(Client)
             Client.src_gen(audio.id)
                 .then((result) => {
                     audio.src = result
                     audio.parentElement.load()
                     return audio.parentElement.play()
                 })
-                .catch((e) => {
-                    throw new Error(e)
-                })
+                .catch((e) => assert.ifError(e))
         } else {
             if (operation) {
                 audio.parentElement.play()
