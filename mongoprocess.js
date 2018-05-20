@@ -55,9 +55,8 @@ let operator = {
     }
 }
 
-
 for (let name in operator)
     if (name === process.argv[2])
-        operator[name].script()
+        return operator[name].script()
 
-    // console.log(`Undefined ${process.argv[2]}`)
+console.log(`Undefined [${process.argv[2]}]`)
