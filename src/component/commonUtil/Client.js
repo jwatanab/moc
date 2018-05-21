@@ -19,4 +19,14 @@ export default class Client {
                 })
         })
     }
+
+    common_request(url, request_name = null) {
+        return new Promise((resolve, reject) => {
+            request.post(url)
+                .end((err, res) => {
+                    assert.ifError(err)
+                    resolve(res.body)
+                })
+        })
+    }
 }

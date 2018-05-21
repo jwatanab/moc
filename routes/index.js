@@ -13,6 +13,13 @@ router.get('/', (req, res, next) => {
     res.render('index')
 })
 
+router.post('/initilize', (req, res, next) => {
+    res.send([
+        "Wouldn't Wanna Be Swept Away",
+        "First(Consider the Lillies)"
+    ])
+})
+
 router.get('/test', (req, res) => {
     res.render('test')
 })

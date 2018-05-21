@@ -3,6 +3,7 @@ import assert, { throws } from 'assert'
 import request from 'superagent'
 import Rcslider from 'rc-slider'
 import { Responsive, Default } from '../component/userAgent/index'
+import { Client } from '../component/commonUtil/index'
 import CSSTransitionGroup from 'react-addons-transition-group'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import { VelocityTransitionGroup } from 'velocity-react'
@@ -11,14 +12,21 @@ export default class Main extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-
         }
     }
 
-    componentDidMount() {
-        const audio_list = document.querySelectorAll('audio')
-        const level = 50
+    componentWillMount() {
+        Client.common_request('/initilize')
+            .then((e) => {
+                // Init AudioElement TouchEventHandler
+                Array.from(document.querySelectorAll('.audio_content'))
+                    .map((i, c) => {
+                        i.dataset.name = e[c]
+                    })
+            })
+    }
 
+    componentDidMount() {
         // Init Image Front
         Array.from(document.querySelectorAll('.img'))
             .map(i => {
@@ -61,8 +69,8 @@ export default class Main extends React.Component {
                 }, { passive: false })
 
                 img_content.addEventListener('touchmove', (e) => {
-                    if (position - e.touches[0].pageX > level) return direction = 'left'
-                    if (position - e.touches[0].pageX < -level) return direction = 'right'
+                    if (position - e.touches[0].pageX > 50) return direction = 'left'
+                    if (position - e.touches[0].pageX < -50) return direction = 'right'
                 }, { passive: false })
 
                 img_content.addEventListener('touchend', (e) => {
@@ -75,6 +83,7 @@ export default class Main extends React.Component {
 
                         const next = document.querySelector(`[data-index="${currentId + 1}"]`)
                         const next_parent = next.closest('.audio_content')
+                        const name = next_parent.dataset.name
 
                         parent.style.opacity = '0'
                         parent.style.left = '400px'
@@ -85,7 +94,7 @@ export default class Main extends React.Component {
                             next.style.opacity = '0'
                             next_parent.className = 'audio_content block'
                             next_parent.style.display = 'block'
-                            innerText.innerHTML = 'test'
+                            innerText.innerHTML = name
                             setTimeout(() => {
                                 next.style.display = 'block'
                                 next.style.left = '-400px'
@@ -100,6 +109,7 @@ export default class Main extends React.Component {
 
                         const next = document.querySelector(`[data-index="${currentId - 1}"]`)
                         const next_parent = next.closest('.audio_content')
+                        const name = next_parent.dataset.name
 
                         parent.style.opacity = '0'
                         parent.style.left = '-400px'
@@ -110,7 +120,7 @@ export default class Main extends React.Component {
                             next.style.opacity = '0'
                             next_parent.className = 'audio_content block'
                             next_parent.style.display = 'block'
-                            innerText.innerHTML = 'test'
+                            innerText.innerHTML = name
                             setTimeout(() => {
                                 next.style.display = 'block'
                                 next.style.left = '400px'
@@ -126,6 +136,8 @@ export default class Main extends React.Component {
                     }
                 }, { passive: false })
             })
+
+        const audio_list = document.querySelectorAll('audio')
 
         // Init AudioElement EventHandler
         for (let j = 0; j < audio_list.length; j++) {
