@@ -1,8 +1,1 @@
-## Document
-
-***
-
-- ### 構成イメージ
-
-
-![moc](/static/32253297_1833114160324286_5794151885803880448_n.jpg "moc")
+![moc](/static/DdujckfVQAAzExC.jpg "moc")
