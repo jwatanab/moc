@@ -19,118 +19,81 @@ export default class Main extends React.Component {
         Client.common_request('/initilize')
             .then((e) => {
                 // Init AudioElement TouchEventHandler
-                Array.from(document.querySelectorAll('.audio_content'))
-                    .map((i, c) => {
-                        i.dataset.name = e[c]
-                    })
+                [document.querySelectorAll('.audio_content')].map((i, c) => i.dataset.name = e[c])
             })
     }
 
     componentDidMount() {
         // Init Image Front
-        Array.from(document.querySelectorAll('.img'))
-            .map(i => {
+        [document.querySelectorAll('.img')]
+            .map(imgElement => {
                 request.post('/main_init')
                     .responseType('arraybuffer')
-                    .query({ name: i.id })
+                    .query({ name: imgElement.id })
                     .send(null)
                     .end((err, res) => {
                         assert.ifError(err)
                         const blob = new Blob([res.body], { type: 'image/png' })
                         const url = URL.createObjectURL(blob)
-                        i.src = url
+                        imgElement.src = url
                     })
             })
 
         // Init AudioElement TouchEventHandler
-        Array.from(document.querySelectorAll('.audio_content'))
-            .map((i, c) => {
+        [document.querySelectorAll('.audio_content')]
+            .map((audioContent, elementIndex) => {
 
-                const img_content = i.querySelector('.img_content')
-                const this_length = (document.querySelectorAll('.audio_content').length - 1)
+                const imgContent = audioContent.querySelector('.img_content')
+                const NODELIST_LENGTH = (document.querySelectorAll('.audio_content').length - 1)
+                const constantSet = {
+                    NODELIST_LENGTH: NODELIST_LENGTH,
+                    MOVE_LKEY: 50,
+                    MOVE_RKEY: -50,
+                    direction: null,
+                    position: null
+                }
 
                 /*
                 const last_parant_element = document.querySelectorAll('.audio_content')[this_length]
                 const last_element = last_parant_element.querySelector('.img_content')
                 */
 
-                let direction, position, defaultClassName
+                imgContent.dataset.index = elementIndex
 
-                img_content.dataset.index = c
-
-                if (c !== 0) {
-                    defaultClassName = i.getAttribute('class')
-                    i.className = `${defaultClassName} none`
+                if (elementIndex !== 0) {
+                    i.className = `${parentElement.getAttribute('class')} none`
                 }
 
-                img_content.addEventListener('touchstart', (e) => {
-                    position = e.touches[0].pageX
-                    direction = ''
+                imgContent.addEventListener('touchstart', (e) => {
+                    constantSet.position = e.touches[0].pageX
+                    constantSet.direction = ''
                 }, { passive: false })
 
                 img_content.addEventListener('touchmove', (e) => {
-                    if (position - e.touches[0].pageX > 50) return direction = 'left'
-                    if (position - e.touches[0].pageX < -50) return direction = 'right'
+                    if (constantSet.position - e.touches[0].pageX > constantSet.MOVE_LKEY) {
+                        return direction = 'left'
+                    }
+                    if (constantSet.position - e.touches[0].pageX < constantSet.MOVE_RKEY) {
+                        return direction = 'right'
+                    }
                 }, { passive: false })
 
                 img_content.addEventListener('touchend', (e) => {
-                    const parentId = e.target.className === 'img_content' ? e.target.id : e.target.parentElement.id
-                    const parent = document.querySelector(`#${parentId}`)
-                    const innerText = document.querySelector('.content_name')
-                    const currentId = parseInt(parent.dataset.index)
-                    if (direction == 'right') {
-                        if (currentId === this_length) return alert('最大件数')
+                    const currentId = e.target.className === 'img_content' ? e.target.id : e.target.parentElement.id
+                    const current = document.querySelector(`#${currentId}`)
+                    const viewText = document.querySelector('.content_name')
+                    const currentIndex = parseInt(current.dataset.index)
+                    if (constantSet.direction == 'right') {
+                        if (currentIndex === this_length) return alert('最大件数')
 
-                        const next = document.querySelector(`[data-index="${currentId + 1}"]`)
-                        const next_parent = next.closest('.audio_content')
-                        const name = next_parent.dataset.name
+                        this.slide_animation(current, viewText, 'right')
 
-                        parent.style.opacity = '0'
-                        parent.style.left = '400px'
-                        setTimeout(() => {
-                            i.style.display = 'none'
-                            parent.display = 'none'
-
-                            next.style.opacity = '0'
-                            next_parent.className = 'audio_content block'
-                            next_parent.style.display = 'block'
-                            innerText.innerHTML = name
-                            setTimeout(() => {
-                                next.style.display = 'block'
-                                next.style.left = '-400px'
-                                setTimeout(() => {
-                                    next.style.opacity = '1'
-                                    next.style.left = '0px'
-                                }, 100)
-                            })
-                        }, 500)
-                    } else if (direction == 'left') {
+                    } else if (constantSet.direction == 'left') {
                         if (currentId === 0) return alert("零")
 
-                        const next = document.querySelector(`[data-index="${currentId - 1}"]`)
-                        const next_parent = next.closest('.audio_content')
-                        const name = next_parent.dataset.name
+                        this.slide_animation(current, viewText, 'left')
 
-                        parent.style.opacity = '0'
-                        parent.style.left = '-400px'
-                        setTimeout(() => {
-                            i.style.display = 'none'
-                            parent.display = 'none'
 
-                            next.style.opacity = '0'
-                            next_parent.className = 'audio_content block'
-                            next_parent.style.display = 'block'
-                            innerText.innerHTML = name
-                            setTimeout(() => {
-                                next.style.display = 'block'
-                                next.style.left = '400px'
-                                setTimeout(() => {
-                                    console.log(next_parent)
-                                    next.style.opacity = '1'
-                                    next.style.left = '0px'
-                                }, 100)
-                            })
-                        }, 500)
                     } else {
                         console.log(e.target)
                     }
@@ -153,26 +116,55 @@ export default class Main extends React.Component {
         }
     }
 
-    operation_select() {
-        if (nextId === 0) {
-            parent.style.opacity = '0'
-            parent.style.left = '400px'
-            setTimeout(() => {
-                last_element.style.opacity = '0'
-                i.style.display = 'none'
-                parent.style.display = 'none'
-                innerText.innerHTML = 'test'
-                setTimeout(() => {
-                    last_parant_element.className = `audio_content block`
-                    last_element.style.display = 'block'
-                    last_element.style.left = '-400px'
-                    setTimeout(() => {
-                        last_element.style.opacity = '1'
-                        last_element.style.left = '0'
-                    }, 100)
-                })
-            }, 500)
+    /**
+     * @param {HTMLElement} current 
+     * @param {HTMLElement} viewText 
+     * @param {String} direction 
+     */
+    slide_animation(current, viewText, direction) {
+
+        const currentId = parseInt(current.dataset.index)
+        const currentParent = current.closest('.audio_content')
+        const constantSet = {
+            SLIDE_RKEY: null,
+            SLIDE_LKEY: null,
+            INCREMENT: null
         }
+
+        if (direction === 'right') {
+            constantSet.SLIDE_RKEY = '400px'
+            constantSet.constantSetSLIDE_LKEY = '-400px'
+            constantSet.INCREMENT = 1
+        } else if (direction === 'left') {
+            constantSet.SLIDE_RKEY = '-400px'
+            constantSet.SLIDE_LKEY = '400px'
+            constantSet.INCREMENT = -1
+        } else {
+            return false
+        }
+
+        const next = document.querySelector(`[data-index="${currentId + constantSet.INCREMENT}"]`)
+        const nextParent = next.closest('.audio_content')
+        const name = nextParent.dataset.name
+
+        current.style.opacity = '0'
+        current.style.left = constantSet.SLIDE_RKEY
+        setTimeout(() => {
+            currentParent.style.display = 'none'
+            current.display = 'none'
+            next.style.opacity = '0'
+            nextParent.className = 'audio_content block'
+            nextParent.style.display = 'block'
+            viewText.innerHTML = name
+            setTimeout(() => {
+                next.style.display = 'block'
+                next.style.left = constantSet.SLIDE_LKEY
+                setTimeout(() => {
+                    next.style.opacity = '1'
+                    next.style.left = '0px'
+                }, 100)
+            })
+        }, 500)
     }
 
     operation_ui(e, recession = null) {
