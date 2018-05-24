@@ -2,9 +2,8 @@ import request from 'superagent'
 import assert, { throws } from 'assert'
 
 export default class Client {
-    constructor() { }
 
-    src_gen(request_name) {
+    static srcGen(request_name) {
         if (request_name === "Serato_Recording") request_name = `${request_name}.m4a`
         return new Promise((resolve, reject) => {
             request.post('/content')
@@ -20,7 +19,7 @@ export default class Client {
         })
     }
 
-    common_request(url, request_name = null) {
+    static commonRequest(url, request_name = null) {
         return new Promise((resolve, reject) => {
             request.post(url)
                 .end((err, res) => {

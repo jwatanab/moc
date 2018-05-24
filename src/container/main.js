@@ -2,8 +2,9 @@ import React from 'react'
 import assert, { throws } from 'assert'
 import request from 'superagent'
 import Rcslider from 'rc-slider'
-import { Responsive, Default } from '../component/userAgent/index'
-import { Client } from '../component/commonUtil/index'
+import Responsive from "../component/userAgent/Responsive"
+import Default from '../component/userAgent/Default'
+import Client from '../component/commonUtil/Client'
 import CSSTransitionGroup from 'react-addons-transition-group'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import { VelocityTransitionGroup } from 'velocity-react'
@@ -16,16 +17,17 @@ export default class Main extends React.Component {
     }
 
     componentWillMount() {
-        Client.common_request('/initilize')
+        Client.commonRequest('/initilize')
             .then((e) => {
                 // Init AudioElement TouchEventHandler
-                [document.querySelectorAll('.audio_content')].map((i, c) => i.dataset.name = e[c])
+                Array.from(document.querySelectorAll('.audio_content'))
+                    .map((i, c) => i.dataset.name = e[c])
             })
     }
 
     componentDidMount() {
         // Init Image Front
-        [document.querySelectorAll('.img')]
+        Array.from(document.querySelectorAll('.img'))
             .map(imgElement => {
                 request.post('/main_init')
                     .responseType('arraybuffer')
@@ -40,58 +42,56 @@ export default class Main extends React.Component {
             })
 
         // Init AudioElement TouchEventHandler
-        [document.querySelectorAll('.audio_content')]
-            .map((audioContent, elementIndex) => {
+        Array.from(document.querySelectorAll('.audio_content'))
+            .map((audioContent, procIndex) => {
 
                 const imgContent = audioContent.querySelector('.img_content')
-                const NODELIST_LENGTH = (document.querySelectorAll('.audio_content').length - 1)
-                const constantSet = {
-                    NODELIST_LENGTH: NODELIST_LENGTH,
-                    MOVE_LKEY: 50,
-                    MOVE_RKEY: -50,
-                    direction: null,
-                    position: null
-                }
+
+                const NODELIST_LENGTH = (document.querySelectorAll('.audio_content').length - 1),
+                    MOVE_LKEY = 50,
+                    MOVE_RKEY = -50
+
+                let direction = null,
+                    position = null
 
                 /*
                 const last_parant_element = document.querySelectorAll('.audio_content')[this_length]
                 const last_element = last_parant_element.querySelector('.img_content')
                 */
 
-                imgContent.dataset.index = elementIndex
+                imgContent.dataset.index = procIndex
 
-                if (elementIndex !== 0) {
-                    i.className = `${parentElement.getAttribute('class')} none`
+                if (procIndex !== 0) {
+                    audioContent.className = `${audioContent.getAttribute('class')} none`
                 }
 
                 imgContent.addEventListener('touchstart', (e) => {
-                    constantSet.position = e.touches[0].pageX
-                    constantSet.direction = ''
+                    position = e.touches[0].pageX
+                    direction = ''
                 }, { passive: false })
 
-                img_content.addEventListener('touchmove', (e) => {
-                    if (constantSet.position - e.touches[0].pageX > constantSet.MOVE_LKEY) {
-                        return direction = 'left'
-                    }
-                    if (constantSet.position - e.touches[0].pageX < constantSet.MOVE_RKEY) {
-                        return direction = 'right'
+                imgContent.addEventListener('touchmove', (e) => {
+                    if (position - e.touches[0].pageX > MOVE_LKEY) {
+                        direction = 'left'
+                    } else if (position - e.touches[0].pageX < MOVE_RKEY) {
+                        direction = 'right'
                     }
                 }, { passive: false })
 
-                img_content.addEventListener('touchend', (e) => {
+                imgContent.addEventListener('touchend', (e) => {
                     const currentId = e.target.className === 'img_content' ? e.target.id : e.target.parentElement.id
                     const current = document.querySelector(`#${currentId}`)
                     const viewText = document.querySelector('.content_name')
                     const currentIndex = parseInt(current.dataset.index)
-                    if (constantSet.direction == 'right') {
-                        if (currentIndex === this_length) return alert('最大件数')
+                    if (direction == 'right') {
+                        if (currentIndex === NODELIST_LENGTH) return alert('最大件数')
 
-                        this.slide_animation(current, viewText, 'right')
+                        this.slideAnimation(current, viewText, 'right')
 
-                    } else if (constantSet.direction == 'left') {
+                    } else if (direction == 'left') {
                         if (currentId === 0) return alert("零")
 
-                        this.slide_animation(current, viewText, 'left')
+                        this.slideAnimation(current, viewText, 'left')
 
 
                     } else {
@@ -107,11 +107,11 @@ export default class Main extends React.Component {
             audio_list[j].addEventListener('play', (e) => {
                 for (let i = 0; i < audio_list.length; i++)
                     if (audio_list[i] !== e.target)
-                        this.operation_ui({ target: audio_list[i] }, true)
+                        this.operationUi({ target: audio_list[i] }, true)
             })
 
             audio_list[j].addEventListener('ended', (e) => {
-                this.operation_ui({ target: audio_list[j] }, true)
+                this.operationUi({ target: audio_list[j] }, true)
             })
         }
     }
@@ -121,34 +121,34 @@ export default class Main extends React.Component {
      * @param {HTMLElement} viewText 
      * @param {String} direction 
      */
-    slide_animation(current, viewText, direction) {
+    slideAnimation(current, viewText, direction) {
 
         const currentId = parseInt(current.dataset.index)
         const currentParent = current.closest('.audio_content')
-        const constantSet = {
-            SLIDE_RKEY: null,
-            SLIDE_LKEY: null,
-            INCREMENT: null
-        }
+
+        let
+            SLIDE_RKEY = null,
+            SLIDE_LKEY = null,
+            INCREMENT = null
 
         if (direction === 'right') {
-            constantSet.SLIDE_RKEY = '400px'
-            constantSet.constantSetSLIDE_LKEY = '-400px'
-            constantSet.INCREMENT = 1
+            SLIDE_RKEY = '400px'
+            SLIDE_LKEY = '-400px'
+            INCREMENT = 1
         } else if (direction === 'left') {
-            constantSet.SLIDE_RKEY = '-400px'
-            constantSet.SLIDE_LKEY = '400px'
-            constantSet.INCREMENT = -1
+            SLIDE_RKEY = '-400px'
+            SLIDE_LKEY = '400px'
+            INCREMENT = -1
         } else {
             return false
         }
 
-        const next = document.querySelector(`[data-index="${currentId + constantSet.INCREMENT}"]`)
+        const next = document.querySelector(`[data-index="${currentId + INCREMENT}"]`)
         const nextParent = next.closest('.audio_content')
         const name = nextParent.dataset.name
 
         current.style.opacity = '0'
-        current.style.left = constantSet.SLIDE_RKEY
+        current.style.left = SLIDE_RKEY
         setTimeout(() => {
             currentParent.style.display = 'none'
             current.display = 'none'
@@ -158,7 +158,7 @@ export default class Main extends React.Component {
             viewText.innerHTML = name
             setTimeout(() => {
                 next.style.display = 'block'
-                next.style.left = constantSet.SLIDE_LKEY
+                next.style.left = SLIDE_LKEY
                 setTimeout(() => {
                     next.style.opacity = '1'
                     next.style.left = '0px'
@@ -167,12 +167,12 @@ export default class Main extends React.Component {
         }, 500)
     }
 
-    operation_ui(e, recession = null) {
+    operationUi(e, recession = null) {
         // Each declaration
         const parentId = e.target.className === 'img_content' ? e.target.id : e.target.parentElement.id
         const parent = document.querySelector(`#${parentId}`)
-        const play_btn = parent.querySelector('.test')
-        const pause_btn = parent.querySelector('.p_test')
+        const playBtn = parent.querySelector('.test')
+        const pauseBtn = parent.querySelector('.p_test')
         const border = parent.querySelector('.border_bg')
         const audio = parent.querySelector('.notificationTone')
 
@@ -184,11 +184,11 @@ export default class Main extends React.Component {
             }`)
         }
 
-        if (Responsive.toSupport()) {
+        if (Responsive.isSupport()) {
             // It saves the music element
             if (recession) {
                 if (typeof audio.src !== 'undifined') {
-                    setTimeout(() => Responsive.operation_audio(audio, false, phone_btn), 300)
+                    setTimeout(() => Responsive.operationAudio(audio, false, phone_btn), 300)
                 }
                 border.style.opacity = '0'
                 return eval(`this.state.${parentId}.ui_touch_flag = false`)
@@ -196,14 +196,14 @@ export default class Main extends React.Component {
 
             // Event Handler processing
             if (eval(`this.state.${parentId}.ui_touch_flag`)) {
-                pause_btn.style.opacity = '1'
-                Responsive.operation_audio(audio, false, phone_btn)
+                pauseBtn.style.opacity = '1'
+                Responsive.operationAudio(audio, false, phone_btn)
 
                 setTimeout(() => {
-                    pause_btn.style.transition = '.7s'
-                    pause_btn.style.opacity = '0'
+                    pauseBtn.style.transition = '.7s'
+                    pauseBtn.style.opacity = '0'
 
-                    setTimeout(() => pause_btn.setAttribute('style', 'opacity: 0;'), 300)
+                    setTimeout(() => pauseBtn.setAttribute('style', 'opacity: 0;'), 300)
                 }, 100)
                 border.style.opacity = '0'
 
@@ -211,18 +211,18 @@ export default class Main extends React.Component {
             } else {
                 // init Event Handler
                 if (eval(`this.state.${parentId}.operation_flag`)) {
-                    play_btn.style.opacity = '1'
-                    Responsive.operation_audio(audio, true, phone_btn)
+                    playBtn.style.opacity = '1'
+                    Responsive.operationAudio(audio, true, phone_btn)
                 } else {
-                    Responsive.operation_audio(audio, true, phone_btn, true)
+                    Responsive.operationAudio(audio, true, phone_btn, true)
                     eval(`this.state.${parentId}.operation_flag = true`)
                 }
 
                 setTimeout(() => {
-                    play_btn.style.transition = '.7s'
-                    play_btn.style.opacity = '0'
+                    playBtn.style.transition = '.7s'
+                    playBtn.style.opacity = '0'
 
-                    setTimeout(() => play_btn.setAttribute('style', 'opacity: 0;'), 300)
+                    setTimeout(() => playBtn.setAttribute('style', 'opacity: 0;'), 300)
                 }, 100)
                 border.style.opacity = '1'
 
@@ -232,7 +232,7 @@ export default class Main extends React.Component {
             // It saves the music element
             if (recession) {
                 if (typeof audio.src !== 'undifined') {
-                    setTimeout(() => Default.operation_audio(audio, false), 300)
+                    setTimeout(() => Default.operationAudio(audio, false), 300)
                 }
                 border.style.opacity = '0'
                 return eval(`this.state.${parentId}.ui_touch_flag = false`)
@@ -240,14 +240,14 @@ export default class Main extends React.Component {
 
             // Event Handler processing
             if (eval(`this.state.${parentId}.ui_touch_flag`)) {
-                pause_btn.style.opacity = '1'
-                Default.operation_audio(audio, false)
+                pauseBtn.style.opacity = '1'
+                Default.operationAudio(audio, false)
 
                 setTimeout(() => {
-                    pause_btn.style.transition = '.7s'
-                    pause_btn.style.opacity = '0'
+                    pauseBtn.style.transition = '.7s'
+                    pauseBtn.style.opacity = '0'
 
-                    setTimeout(() => pause_btn.setAttribute('style', 'opacity: 0;'), 300)
+                    setTimeout(() => pauseBtn.setAttribute('style', 'opacity: 0;'), 300)
                 }, 100)
                 border.style.opacity = '0'
 
@@ -255,18 +255,18 @@ export default class Main extends React.Component {
             } else {
                 // init Event Handler
                 if (eval(`this.state.${parentId}.operation_flag`)) {
-                    play_btn.style.opacity = '1'
-                    Default.operation_audio(audio, true)
+                    playBtn.style.opacity = '1'
+                    Default.operationAudio(audio, true)
                 } else {
-                    Default.operation_audio(audio, true, true)
+                    Default.operationAudio(audio, true, true)
                     eval(`this.state.${parentId}.operation_flag = true`)
                 }
 
                 setTimeout(() => {
-                    play_btn.style.transition = '.7s'
-                    play_btn.style.opacity = '0'
+                    playBtn.style.transition = '.7s'
+                    playBtn.style.opacity = '0'
 
-                    setTimeout(() => play_btn.setAttribute('style', 'opacity: 0;'), 300)
+                    setTimeout(() => playBtn.setAttribute('style', 'opacity: 0;'), 300)
                 }, 100)
                 border.style.opacity = '1'
 
@@ -282,7 +282,7 @@ export default class Main extends React.Component {
                     <div className="audio_content">
                         <div className="content_bar">
                             <div className="touch_ui">
-                                <div className="img_content" id="node1" onClick={(e) => this.operation_ui(e)}>
+                                <div className="img_content" id="node1" onClick={(e) => this.operationUi(e)}>
                                     <div className="border_bg"></div>
                                     <img className="img" id="wolud"></img>
                                     <span className="test"></span>
@@ -297,7 +297,7 @@ export default class Main extends React.Component {
                     <div className="audio_content">
                         <div className="content_bar">
                             <div className="touch_ui">
-                                <div className="img_content" id="node0" onClick={(e) => this.operation_ui(e)}>
+                                <div className="img_content" id="node0" onClick={(e) => this.operationUi(e)}>
                                     <div className="border_bg"></div>
                                     <img className="img" id="out_world"></img>
                                     <span className="test"></span>
