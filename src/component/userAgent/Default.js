@@ -3,8 +3,16 @@ import assert, { throws } from 'assert'
 
 export default class Default {
 
+    /**
+     * 
+     * @param {source} audio 
+     * @param {*} operation 
+     * @param {*} option 
+     */
     static operationAudio(audio, operation, option = null) {
-        if (!audio) throw new Error(`DOMException: audio is ${typeof audio}`)
+        if (arguments.length < 3) {
+            throw new RangeError("Not enough arguments")
+        }
         if (option) {
             Client.srcGen(audio.id)
                 .then((result) => {
@@ -16,9 +24,11 @@ export default class Default {
         } else {
             if (operation) {
                 audio.parentElement.play()
+            } else if (typeof operation === 'undifined') {
+                return
+            } else if (!operation) {
+                audio.parentElement.pause()
             }
-            else if (typeof ope === 'undifined') return
-            else if (!operation) audio.parentElement.pause()
         }
     }
 }
