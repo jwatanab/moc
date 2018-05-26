@@ -7,6 +7,7 @@
         "script:build": "start /min watch webpack src"
     },
     "dependencies": {
+        "async": "^2.6.1",
         "babel-plugin-add-module-exports": "^0.2.1",
         "babel-preset-env": "^1.6.1",
         "babel-preset-react": "^6.24.1",

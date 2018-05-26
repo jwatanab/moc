@@ -2,7 +2,6 @@ import request from 'superagent'
 import assert, { throws } from 'assert'
 
 export default class Client {
-
     static srcGen(request_name) {
         if (request_name === "Serato_Recording") request_name = `${request_name}.m4a`
         return new Promise((resolve, reject) => {

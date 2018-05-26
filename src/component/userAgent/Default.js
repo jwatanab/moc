@@ -10,7 +10,7 @@ export default class Default {
      * @param {*} option 
      */
     static operationAudio(audio, operation, option = null) {
-        if (arguments.length < 3) {
+        if (arguments.length < 2) {
             throw new RangeError("Not enough arguments")
         }
         if (option) {
