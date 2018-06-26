@@ -8,6 +8,7 @@ const router = express.Router()
 const url = 'mongodb://localhost:27017'
 const dbName = 'archiveMoc'
 const fs_collection = 'fs.files'
+const us_collection = 'users'
 
 router.get('/', (req, res, next) => {
     res.render('index')
@@ -18,6 +19,26 @@ router.post('/initilize', (req, res, next) => {
         "Wouldn't Wanna Be Swept Away",
         "First(Consider the Lillies)"
     ])
+})
+
+router.post('/init', (req, res) => {
+    MongoClient.connect(url, (e, c) => {
+        assert.ifError(e)
+        let jsonAry = []
+        const db = c.db(dbName)
+        const collection = db.collection(us_collection)
+        collection.find().toArray((e, docs) => {
+            assert.ifError(e)
+            for (const i in docs) {
+                jsonAry.push({
+                    audioName: docs[i].audioName,
+                    imgName: docs[i].imgName
+                })
+            }
+            res.send(jsonAry)
+            c.close()
+        })
+    })
 })
 
 router.get('/test', (req, res) => {
@@ -49,7 +70,7 @@ router.post('/main_init', (req, res) => {
         const db = c.db(dbName)
         const collection = db.collection(fs_collection)
 
-        collection.findOne({ 'filename': req.query.name })
+        collection.findOne({ 'filename': req.query.filename })
             .then((e) => {
                 let content = []
                 const ins = new mongodb.GridFSBucket(db)

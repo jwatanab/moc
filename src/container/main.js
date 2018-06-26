@@ -1,7 +1,8 @@
 import React from 'react'
-import assert, { throws } from 'assert'
+import assert from 'assert'
 import request from 'superagent'
 import Rcslider from 'rc-slider'
+import Construction from '../component/commonUtil/Initialize'
 import Responsive from "../component/userAgent/Responsive"
 import Default from '../component/userAgent/Default'
 import Client from '../component/commonUtil/Client'
@@ -13,15 +14,48 @@ export default class Main extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
+            initFlag: false,
+            loadFlag: false,
         }
+        this.initData = null
+        this.asset = {
+            direction: '',
+            MOVE_LKEY: 50,
+            MOVE_RKEY: -50,
+            position: null,
+            NODELIST_LENGTH: null,
+            contentName: 'content_name'
+        }
+        this.flag = false
     }
 
     componentWillMount() {
-        Client.commonRequest('/initilize')
-            .then((e) => {
-                // Init AudioElement TouchEventHandler
-                Array.from(document.querySelectorAll('.audio_content'))
-                    .map((i, c) => i.dataset.name = e[c])
+        Client.commonRequest('/init')
+            .then((res) => {
+                this.initData = res
+
+                Object.keys([this.initData[this.initData.length - 1]]).map(i => {
+                    Promise.all([
+                        Client.toUrl({
+                            url: '/content',
+                            request_name: this.initData[this.initData.length - 1].audioName,
+                            type: 'audio/mpeg3'
+                        }),
+                        Client.toUrl({
+                            url: '/main_init',
+                            request_name: this.initData[this.initData.length - 1].imgName,
+                            type: 'image/jpeg'
+                        })
+                    ]).then((res) => {
+                        Object.keys(res).map(i => [
+                            this.setState({
+                                [res[i].excs]: res[i].url
+                            })
+                        ])
+                    }).catch((e) => {
+                        throw new e
+                    })
+                })
             })
     }
 
@@ -116,6 +150,37 @@ export default class Main extends React.Component {
         }
     }
 
+    getPosition(e) {
+        this.asset.position = e.touches[0].pageX
+        this.asset.direction = ''
+    }
+
+    setPosition(e) {
+        if (this.asset.position - e.touches[0].pageX > this.asset.MOVE_LKEY) {
+            this.asset.direction = 'left'
+        } else if (this.asset.position - e.touches[0].pageX < this.asset.MOVE_RKEY) {
+            this.asset.direction = 'right'
+        }
+    }
+
+    slideController(e) {
+        const currentId = e.target.className === this.asset.imgContent ? e.target.id : e.target.parentElement.id
+        const current = document.querySelector(`#${currentId}`)
+        const viewText = document.querySelector(`.${this.asset.contentName}`)
+        const currentIndex = parseInt(current.dataset.index)
+        if (this.asset.direction == 'right') {
+            if (currentIndex === this.asset.NODELIST_LENGTH) return alert('最大件数')
+
+            this.slideAnimation(current, viewText, 'right')
+
+        } else if (this.asset.direction == 'left') {
+            if (currentId === 0) return alert("零")
+
+            this.slideAnimation(current, viewText, 'left')
+        } else {
+        }
+    }
+
     /**
      * @param {HTMLElement} current 
      * @param {HTMLElement} viewText 
@@ -167,6 +232,10 @@ export default class Main extends React.Component {
         }, 500)
     }
 
+    /**
+     * @param {*} e 
+     * @param {*} recession 
+     */
     operationUi(e, recession = null) {
         // Each declaration
         const parentId = e.target.className === 'img_content' ? e.target.id : e.target.parentElement.id
@@ -276,44 +345,80 @@ export default class Main extends React.Component {
     }
 
     render() {
-        return (
-            <main className="main_container">
-                <div className="media_content">
-                    <div className="audio_content">
-                        <div className="content_bar">
-                            <div className="touch_ui">
-                                <div className="img_content" id="node1" onClick={(e) => this.operationUi(e)}>
-                                    <div className="border_bg"></div>
-                                    <img className="img" id="wolud"></img>
-                                    <span className="test"></span>
-                                    <span className="p_test"></span>
-                                    <audio className="my_audio">
-                                        <source className="notificationTone" id="./Down.m4a" />
-                                    </audio>
+
+        const prop = (object) => (key) => object[key]
+        let content = this.initData
+        let loading = this.state.loadFlag
+        let bundle
+
+        if (content) {
+            bundle = Object.keys([this.initData[this.initData.length - 1]]).map((i, c, o) => {
+                return Construction(
+                    this.initData[4].audioName,
+                    this.initData[4].imgName,
+                    this,
+                    c,
+                    this.state[this.initData[4].imgName],
+                    this.state[this.initData[4].audioName]
+                )
+            })
+            this.flag = true
+        } else {
+            content = null
+        }
+        if (this.flag) {
+            console.log("start")
+            return (
+                <main className="main_container">
+                    <div className="media_content">
+                        {bundle}
+                    </div>
+                    <div className="ui_content">
+                        <span className="content_name">Nine</span>
+                    </div>
+                </main>
+            )
+        } else {
+            return (
+                <main className="main_container">
+                    <div className="media_content">
+                        <div className="audio_content">
+                            <div className="content_bar">
+                                <div className="touch_ui">
+                                    <div className="img_content" id="node1" onClick={(e) => this.operationUi(e)}>
+                                        <div className="border_bg"></div>
+                                        <img className="img" id="wolud"></img>
+                                        <span className="test"></span>
+                                        <span className="p_test"></span>
+                                        <audio className="my_audio">
+                                            <source className="notificationTone" id="./Down.m4a" />
+                                        </audio>
+                                    </div>
                                 </div>
-                            </div>
-                        </div> {/* content_bar */}
-                    </div> {/* audio_content */}
-                    <div className="audio_content">
-                        <div className="content_bar">
-                            <div className="touch_ui">
-                                <div className="img_content" id="node0" onClick={(e) => this.operationUi(e)}>
-                                    <div className="border_bg"></div>
-                                    <img className="img" id="out_world"></img>
-                                    <span className="test"></span>
-                                    <span className="p_test"></span>
-                                    <audio className="my_audio">
-                                        <source className="notificationTone" id="Serato_Recording" />
-                                    </audio>
+                            </div> {/* content_bar */}
+                        </div> {/* audio_content */}
+                        <div className="audio_content">
+                            <div className="content_bar">
+                                <div className="touch_ui">
+                                    <div className="img_content" id="node0" onClick={(e) => this.operationUi(e)}>
+                                        <div className="border_bg"></div>
+                                        <img className="img" id="out_world"></img>
+                                        <span className="test"></span>
+                                        <span className="p_test"></span>
+                                        <audio className="my_audio">
+                                            <source className="notificationTone" id="Serato_Recording" />
+                                        </audio>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>{/* content_bar */}
-                    </div> {/* audio_content */}
-                </div>{/* media_content */}
-                <div className="ui_content">
-                    <span className="content_name">Wouldn't Wanna Be Swept Away</span>
-                </div>
-            </main>
-        )
+                            </div>{/* content_bar */}
+                        </div> {/* audio_content */}
+
+                    </div>{/* media_content */}
+                    <div className="ui_content">
+                        <span className="content_name">Wouldn't Wanna Be Swept Away</span>
+                    </div>
+                </main>
+            )
+        }
     }
 }

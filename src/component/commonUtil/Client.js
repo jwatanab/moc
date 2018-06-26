@@ -2,18 +2,17 @@ import request from 'superagent'
 import assert, { throws } from 'assert'
 
 export default class Client {
-    static srcGen(request_name) {
-        if (request_name === "Serato_Recording") request_name = `${request_name}.m4a`
+    static toUrl(require) {
         return new Promise((resolve, reject) => {
-            request.post('/content')
+            request.post(require.url)
                 .responseType('arraybuffer')
-                .query({ filename: request_name })
+                .query({ filename: require.request_name })
                 .send(null)
                 .end((err, res) => {
                     assert.ifError(err)
-                    const blob = new Blob([res.body], { type: 'audio/mpeg3' })
+                    const blob = new Blob([res.body], { type: require.type })
                     const url = URL.createObjectURL(blob)
-                    resolve(url)
+                    resolve({ url: url, excs: require.request_name })
                 })
         })
     }
