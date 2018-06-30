@@ -144,6 +144,31 @@ export default class Main extends React.Component {
     }
 
     /**
+     * @param {*} e
+     * @return void 
+     */
+    playHandler(e) {
+        const audioList = document.querySelectorAll('audio')
+        for (let i = 0; i < audioList.length; i++)
+            if (audioList[i] !== e.target) {
+                this.operationUi({ target: audioList[i] }, true)
+                console.log('!if')
+            } else {
+                console.log('if')
+            }
+    }
+
+    /**
+     * 
+     * @param {*} e 
+     * @return void
+     */
+    endedHandler(e) {
+        console.log('ended = ' + e.target)
+        this.operationUi(e, true)
+    }
+
+    /**
      * @param {*} e 
      * @param {*} recession 
      */
@@ -155,8 +180,6 @@ export default class Main extends React.Component {
         const pauseBtn = parent.querySelector('.p_test')
         const border = parent.querySelector('.border_bg')
         const audio = parent.querySelector('.notificationTone')
-
-        console.log(parent, audio)
 
         // Individual processing
         if (eval(`typeof this.state.${parentId}`) === 'undefined') {

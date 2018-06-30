@@ -23,7 +23,10 @@ const Initialize = (audioName, imgName, main, c, imgSrc, audioSrc) => {
                         ></img>
                         <span className="test"></span>
                         <span className="p_test"></span>
-                        <audio className="my_audio">
+                        <audio className="my_audio"
+                            onPlay={(e) => main.startHandler(e)}
+                            onEnded={(e) => main.endedHandler(e)}
+                        >
                             <source className="notificationTone" id={audioName} src={audioSrc} />
                         </audio>
                     </div>

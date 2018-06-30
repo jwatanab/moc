@@ -51,7 +51,6 @@ usersOperator = {
                     for (const i in docs) {
                         console.log(`audioName: ${docs[i].audioName}`)
                         console.log(`imgName:   ${docs[i].imgName}`)
-                        console.log(`type: ${docs[i].type}`)
                     }
                     client.close()
                     process.exit(0)
@@ -60,7 +59,7 @@ usersOperator = {
         }
     }, 'insert': {
         script: () => {
-            if (process.argv.length < 5) {
+            if (process.argv.length < 4) {
                 console.log("Usage: mongodb insert [audioName] [imgName]")
                 process.exit(-1)
             }
@@ -71,7 +70,6 @@ usersOperator = {
                 collection.insertMany([{
                     audioName: process.argv[3],
                     imgName: process.argv[4],
-                    type: process.argv[5]
                 }], (e, result) => {
                     assert.ifError(e)
                     assert.equal(1, result.result.n);
