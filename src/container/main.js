@@ -1,7 +1,4 @@
 import React from 'react'
-import assert from 'assert'
-import request from 'superagent'
-import Rcslider from 'rc-slider'
 import Construction from '../component/commonUtil/Initialize'
 import Responsive from "../component/userAgent/Responsive"
 import Default from '../component/userAgent/Default'
@@ -14,7 +11,6 @@ export default class Main extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            initFlag: false,
             loadFlag: false,
         }
         this.initData = null
@@ -26,24 +22,24 @@ export default class Main extends React.Component {
             NODELIST_LENGTH: null,
             contentName: 'content_name'
         }
-        this.flag = false
     }
 
     componentWillMount() {
         Client.commonRequest('/init')
             .then((res) => {
                 this.initData = res
+                this.asset.NODELIST_LENGTH = this.initData.length - 1
 
-                Object.keys([this.initData[this.initData.length - 1]]).map(i => {
+                Object.keys(this.initData).map(i => {
                     Promise.all([
                         Client.toUrl({
                             url: '/content',
-                            request_name: this.initData[this.initData.length - 1].audioName,
+                            request_name: this.initData[i].audioName,
                             type: 'audio/mpeg3'
                         }),
                         Client.toUrl({
                             url: '/main_init',
-                            request_name: this.initData[this.initData.length - 1].imgName,
+                            request_name: this.initData[i].imgName,
                             type: 'image/jpeg'
                         })
                     ]).then((res) => {
@@ -60,94 +56,7 @@ export default class Main extends React.Component {
     }
 
     componentDidMount() {
-        // Init Image Front
-        Array.from(document.querySelectorAll('.img'))
-            .map(imgElement => {
-                request.post('/main_init')
-                    .responseType('arraybuffer')
-                    .query({ name: imgElement.id })
-                    .send(null)
-                    .end((err, res) => {
-                        assert.ifError(err)
-                        const blob = new Blob([res.body], { type: 'image/png' })
-                        const url = URL.createObjectURL(blob)
-                        imgElement.src = url
-                    })
-            })
 
-        // Init AudioElement TouchEventHandler
-        Array.from(document.querySelectorAll('.audio_content'))
-            .map((audioContent, procIndex) => {
-
-                const imgContent = audioContent.querySelector('.img_content')
-
-                const NODELIST_LENGTH = (document.querySelectorAll('.audio_content').length - 1),
-                    MOVE_LKEY = 50,
-                    MOVE_RKEY = -50
-
-                let direction = null,
-                    position = null
-
-                /*
-                const last_parant_element = document.querySelectorAll('.audio_content')[this_length]
-                const last_element = last_parant_element.querySelector('.img_content')
-                */
-
-                imgContent.dataset.index = procIndex
-
-                if (procIndex !== 0) {
-                    audioContent.className = `${audioContent.getAttribute('class')} none`
-                }
-
-                imgContent.addEventListener('touchstart', (e) => {
-                    position = e.touches[0].pageX
-                    direction = ''
-                }, { passive: false })
-
-                imgContent.addEventListener('touchmove', (e) => {
-                    if (position - e.touches[0].pageX > MOVE_LKEY) {
-                        direction = 'left'
-                    } else if (position - e.touches[0].pageX < MOVE_RKEY) {
-                        direction = 'right'
-                    }
-                }, { passive: false })
-
-                imgContent.addEventListener('touchend', (e) => {
-                    const currentId = e.target.className === 'img_content' ? e.target.id : e.target.parentElement.id
-                    const current = document.querySelector(`#${currentId}`)
-                    const viewText = document.querySelector('.content_name')
-                    const currentIndex = parseInt(current.dataset.index)
-                    if (direction == 'right') {
-                        if (currentIndex === NODELIST_LENGTH) return alert('最大件数')
-
-                        this.slideAnimation(current, viewText, 'right')
-
-                    } else if (direction == 'left') {
-                        if (currentId === 0) return alert("零")
-
-                        this.slideAnimation(current, viewText, 'left')
-
-
-                    } else {
-                        console.log(e.target)
-                    }
-                }, { passive: false })
-            })
-
-        const audio_list = document.querySelectorAll('audio')
-
-        // Init AudioElement EventHandler
-        for (let j = 0; j < audio_list.length; j++) {
-            audio_list[j].addEventListener('play', (e) => {
-                for (let i = 0; i < audio_list.length; i++)
-                    if (audio_list[i] !== e.target)
-                        this.operationUi({ target: audio_list[i] }, true)
-            })
-
-            audio_list[j].addEventListener('ended', (e) => {
-                this.operationUi({ target: audio_list[j] }, true)
-            })
-        }
     }
 
     getPosition(e) {
@@ -244,6 +153,8 @@ export default class Main extends React.Component {
         const pauseBtn = parent.querySelector('.p_test')
         const border = parent.querySelector('.border_bg')
         const audio = parent.querySelector('.notificationTone')
+
+        console.log(parent, audio)
 
         // Individual processing
         if (eval(`typeof this.state.${parentId}`) === 'undefined') {
@@ -346,28 +257,27 @@ export default class Main extends React.Component {
 
     render() {
 
-        const prop = (object) => (key) => object[key]
         let content = this.initData
         let loading = this.state.loadFlag
+        let initFlag = this.initFlag
         let bundle
 
         if (content) {
-            bundle = Object.keys([this.initData[this.initData.length - 1]]).map((i, c, o) => {
+            bundle = Object.keys(this.initData).map((i, c, o) => {
                 return Construction(
-                    this.initData[4].audioName,
-                    this.initData[4].imgName,
+                    this.initData[i].audioName,
+                    this.initData[i].imgName,
                     this,
                     c,
-                    this.state[this.initData[4].imgName],
-                    this.state[this.initData[4].audioName]
+                    this.state[this.initData[i].imgName],
+                    this.state[this.initData[i].audioName]
                 )
             })
             this.flag = true
         } else {
-            content = null
+
         }
         if (this.flag) {
-            console.log("start")
             return (
                 <main className="main_container">
                     <div className="media_content">
@@ -380,44 +290,7 @@ export default class Main extends React.Component {
             )
         } else {
             return (
-                <main className="main_container">
-                    <div className="media_content">
-                        <div className="audio_content">
-                            <div className="content_bar">
-                                <div className="touch_ui">
-                                    <div className="img_content" id="node1" onClick={(e) => this.operationUi(e)}>
-                                        <div className="border_bg"></div>
-                                        <img className="img" id="wolud"></img>
-                                        <span className="test"></span>
-                                        <span className="p_test"></span>
-                                        <audio className="my_audio">
-                                            <source className="notificationTone" id="./Down.m4a" />
-                                        </audio>
-                                    </div>
-                                </div>
-                            </div> {/* content_bar */}
-                        </div> {/* audio_content */}
-                        <div className="audio_content">
-                            <div className="content_bar">
-                                <div className="touch_ui">
-                                    <div className="img_content" id="node0" onClick={(e) => this.operationUi(e)}>
-                                        <div className="border_bg"></div>
-                                        <img className="img" id="out_world"></img>
-                                        <span className="test"></span>
-                                        <span className="p_test"></span>
-                                        <audio className="my_audio">
-                                            <source className="notificationTone" id="Serato_Recording" />
-                                        </audio>
-                                    </div>
-                                </div>
-                            </div>{/* content_bar */}
-                        </div> {/* audio_content */}
-
-                    </div>{/* media_content */}
-                    <div className="ui_content">
-                        <span className="content_name">Wouldn't Wanna Be Swept Away</span>
-                    </div>
-                </main>
+                <div>Loding中</div>
             )
         }
     }

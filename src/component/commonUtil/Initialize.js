@@ -7,11 +7,14 @@ const Initialize = (audioName, imgName, main, c, imgSrc, audioSrc) => {
         visibility = ''
     else
         visibility = ' none'
+
+    console.log(audioName)
+
     return (
         <div className={`audio_content` + visibility} data-name={audioName} key={c}>
             <div className="content_bar">
                 <div className="touch_ui">
-                    <div className="img_content" id="node1" data-index={c} onClick={(e) => main.operationUi(e)}>
+                    <div className="img_content" id={`node${c}`} data-index={c} onClick={(e) => main.operationUi(e)}>
                         <div className="border_bg"></div>
                         <img className="img"
                             id={imgName}

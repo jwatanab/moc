@@ -11,21 +11,16 @@ export default class Responsive {
      * @param {*} option 
      */
     static operationAudio(audio, operation, phoneBtn, option = null) {
-        if (!audio) throw new Error(`DOMException: audio is ${typeof audio}`)
-        if (option) {
-            Client.srcGen(audio.id)
-                .then((result) => {
-                    audio.src = result
-                    audio.parentElement.load()
-                    return phoneBtn.click()
-                })
-                .catch((e) => assert.ifError(e))
+        if (arguments.length < 2) {
+            throw new RangeError("Not enough arguments")
+        }
+        console.log("Responsive")
+        if (operation) {
+            audio.parentElement.play()
+        } else if (typeof operation === 'undifined') {
+            return
         } else {
-            if (operation) {
-                phoneBtn.click()
-            }
-            else if (typeof ope === 'undifined') return
-            else if (!operation) phoneBtn.click()
+            audio.parentElement.pause()
         }
     }
 
@@ -33,7 +28,8 @@ export default class Responsive {
      * 
     */
     static isSupport() {
-        if (navigator.userAgent.indexOf('iphone') > 0 && navigator.userAgent.indexOf('iPad') == -1)
+        console.log(navigator.userAgent)
+        if (navigator.userAgent.indexOf('iPhone') > 0 && navigator.userAgent.indexOf('iPad') !== -1)
             return true
         else if (navigator.userAgent.indexOf('iPod') > 0)
             return true
