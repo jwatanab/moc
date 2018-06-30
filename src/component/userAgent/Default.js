@@ -1,15 +1,10 @@
-import Client from '../commonUtil/Client'
-import assert, { throws } from 'assert'
-
 export default class Default {
 
     /**
-     * 
-     * @param {source} audio 
-     * @param {*} operation 
-     * @param {*} option 
+     * @param {HTMLAudioElement} audio 
+     * @param {boolean} operation 
      */
-    static operationAudio(audio, operation, option = null) {
+    static operationAudio(audio, operation) {
         if (arguments.length < 2) {
             throw new RangeError("Not enough arguments")
         }
@@ -18,6 +13,7 @@ export default class Default {
         } else if (typeof operation === 'undifined') {
             return
         } else {
+            console.log('start')
             audio.parentElement.pause()
         }
     }

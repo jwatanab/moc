@@ -29,7 +29,6 @@ export default class Main extends React.Component {
             .then((res) => {
                 this.initData = res
                 this.asset.NODELIST_LENGTH = this.initData.length - 1
-                console.log('atrat')
 
                 Object.keys(this.initData).map(i => {
                     Promise.all([
@@ -61,11 +60,17 @@ export default class Main extends React.Component {
 
     }
 
+    /**
+     * @param {TouchEvent} e 
+     */
     getPosition(e) {
         this.asset.position = e.touches[0].pageX
         this.asset.direction = ''
     }
 
+    /**
+     * @param {TouchEvent} e 
+     */
     setPosition(e) {
         if (this.asset.position - e.touches[0].pageX > this.asset.MOVE_LKEY) {
             this.asset.direction = 'left'
@@ -74,31 +79,32 @@ export default class Main extends React.Component {
         }
     }
 
+    /**
+     * @param {TouchEvent} e 
+     */
     slideController(e) {
         const currentId = e.target.className === this.asset.imgContent ? e.target.id : e.target.parentElement.id
         const current = document.querySelector(`#${currentId}`)
-        const viewText = document.querySelector(`.${this.asset.contentName}`)
         const currentIndex = parseInt(current.dataset.index)
         if (this.asset.direction == 'right') {
-            if (currentIndex === this.asset.NODELIST_LENGTH) return alert('最大件数')
+            if (currentIndex === this.asset.NODELIST_LENGTH) return alert('max')
 
-            this.slideAnimation(current, viewText, 'right')
+            this.slideAnimation(current, 'right')
 
         } else if (this.asset.direction == 'left') {
-            if (currentId === 0) return alert("零")
+            if (currentIndex === 0) return alert("min")
 
-            this.slideAnimation(current, viewText, 'left')
+            this.slideAnimation(current, 'left')
         } else {
         }
     }
 
     /**
-     * @param {HTMLElement} current 
-     * @param {HTMLElement} viewText 
+     * @param {HTMLDivElement} current 
      * @param {String} direction 
      */
-    slideAnimation(current, viewText, direction) {
-
+    slideAnimation(current, direction) {
+        const viewText = document.querySelector(`.${this.asset.contentName}`)
         const currentId = parseInt(current.dataset.index)
         const currentParent = current.closest('.audio_content')
 
@@ -119,58 +125,44 @@ export default class Main extends React.Component {
             return false
         }
 
-        const next = document.querySelector(`[data-index="${currentId + INCREMENT}"]`)
-        const nextParent = next.closest('.audio_content')
-        const name = nextParent.dataset.name
+        const sibling = document.querySelector(`[data-index="${currentId + INCREMENT}"]`)
+        const siblingParent = sibling.closest('.audio_content')
+        const name = siblingParent.dataset.name
 
         current.style.opacity = '0'
         current.style.left = SLIDE_RKEY
         setTimeout(() => {
             currentParent.style.display = 'none'
+            currentParent.className = 'audio_content'
             current.display = 'none'
-            next.style.opacity = '0'
-            nextParent.className = 'audio_content block'
-            nextParent.style.display = 'block'
+            sibling.style.opacity = '0'
+            siblingParent.className = 'audio_content block real'
+            siblingParent.style.display = 'block'
             viewText.innerHTML = name
             setTimeout(() => {
-                next.style.display = 'block'
-                next.style.left = SLIDE_LKEY
+                sibling.style.display = 'block'
+                sibling.style.left = SLIDE_LKEY
                 setTimeout(() => {
-                    next.style.opacity = '1'
-                    next.style.left = '0px'
+                    sibling.style.opacity = '1'
+                    sibling.style.left = '0px'
                 }, 100)
             })
         }, 500)
     }
 
     /**
-     * @param {*} e
-     * @return void 
+     * @param {SyntheticEvent} e
      */
     playHandler(e) {
         const audioList = document.querySelectorAll('audio')
         for (let i = 0; i < audioList.length; i++)
-            if (audioList[i] !== e.target) {
+            if (audioList[i] !== e.target)
                 this.operationUi({ target: audioList[i] }, true)
-                console.log('!if')
-            } else {
-                console.log('if')
-            }
     }
 
     /**
-     * 
-     * @param {*} e 
-     * @return void
-     */
-    endedHandler(e) {
-        console.log('ended = ' + e.target)
-        this.operationUi(e, true)
-    }
-
-    /**
-     * @param {*} e 
-     * @param {*} recession 
+     * @param {TouchEvent} e 
+     * @param {boolean} recession 説明
      */
     operationUi(e, recession = null) {
         // Each declaration
@@ -192,9 +184,6 @@ export default class Main extends React.Component {
         if (Responsive.isSupport()) {
             // It saves the music element
             if (recession) {
-                if (typeof audio.src !== 'undifined') {
-                    setTimeout(() => Responsive.operationAudio(audio, false, phone_btn), 300)
-                }
                 border.style.opacity = '0'
                 return eval(`this.state.${parentId}.ui_touch_flag = false`)
             }
@@ -202,7 +191,7 @@ export default class Main extends React.Component {
             // Event Handler processing
             if (eval(`this.state.${parentId}.ui_touch_flag`)) {
                 pauseBtn.style.opacity = '1'
-                Responsive.operationAudio(audio, false, phone_btn)
+                Responsive.operationAudio(audio, false)
 
                 setTimeout(() => {
                     pauseBtn.style.transition = '.7s'
@@ -217,9 +206,9 @@ export default class Main extends React.Component {
                 // init Event Handler
                 if (eval(`this.state.${parentId}.operation_flag`)) {
                     playBtn.style.opacity = '1'
-                    Responsive.operationAudio(audio, true, phone_btn)
+                    Responsive.operationAudio(audio, true)
                 } else {
-                    Responsive.operationAudio(audio, true, phone_btn, true)
+                    Responsive.operationAudio(audio, true)
                     eval(`this.state.${parentId}.operation_flag = true`)
                 }
 
@@ -236,9 +225,7 @@ export default class Main extends React.Component {
         } else {
             // It saves the music element
             if (recession) {
-                if (typeof audio.src !== 'undifined') {
-                    setTimeout(() => Default.operationAudio(audio, false), 300)
-                }
+                Default.operationAudio(audio, false)
                 border.style.opacity = '0'
                 return eval(`this.state.${parentId}.ui_touch_flag = false`)
             }
@@ -263,7 +250,7 @@ export default class Main extends React.Component {
                     playBtn.style.opacity = '1'
                     Default.operationAudio(audio, true)
                 } else {
-                    Default.operationAudio(audio, true, true)
+                    Default.operationAudio(audio, true)
                     eval(`this.state.${parentId}.operation_flag = true`)
                 }
 
@@ -281,10 +268,7 @@ export default class Main extends React.Component {
     }
 
     render() {
-
         let content = this.initData
-        let loading = this.state.loadFlag
-        let initFlag = this.initFlag
         let bundle
 
         if (content) {

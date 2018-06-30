@@ -88,7 +88,7 @@
          *----------------------------------------*/
         .main_container .audio_content .content_bar {
             display: flex;
-            width: 80%;
+            width: 90%;
             font-size: 1.4em;
             padding: 0 24px;
             border-radius: 2px;
@@ -96,10 +96,11 @@
         }
 
         /*----------------------------------------
-         * 画僧操作部分規基底
+         * 曲名表示部分
          *----------------------------------------*/
-        .touch_ui {
-            margin: 0;
+        .ui_content {
+            margin-left: 10px;
+            width: 100%;
         }
 
         /*----------------------------------------
@@ -258,6 +259,105 @@
         }
 
         /*----------------------------------------
+         * 補助部分
+         *----------------------------------------*/
+        .controll_bar {
+            position: fixed;
+            bottom: 0%;
+            width: 80%;
+            padding: 8px;
+            display: flex;
+            justify-content: center; 
+            align-items: center;
+            background-color: rgb(255, 255, 255)
+        }
+    
+        /*----------------------------------------
+         * ボタンラッパー部分
+         *----------------------------------------*/
+        .wrapper_button {
+            margin: 0;
+            filter: drop-shadow(10px 10px 30px rgba(0, 0, 0, 0.8));
+            padding: 9px;
+            border-radius: 50%;
+        }
+
+        /*----------------------------------------
+         * 再生部分
+         *----------------------------------------*/
+         .playbutton:after {
+            content: '';
+            display: block;
+            width: 0;
+            height: 0;
+            border-top: 18px inset transparent;
+            border-bottom: 18px inset transparent;
+            border-left: 30px solid #222;
+            border-right: 0;
+            filter: drop-shadow(10px 10px 10px rgba(0, 0, 0, 0.6));
+            margin: 0 22px;
+        }
+
+        /*----------------------------------------
+         * prev部分
+         *----------------------------------------*/
+        .prevbutton::before {
+            content: '';
+            display: block;
+            width: 0;
+            height: 0;
+            border-top: 14px inset transparent;
+            border-bottom: 14px inset transparent;
+            border-right: 24px solid #222;
+            border-left: 0;
+            margin-bottom: -28px;
+            filter: drop-shadow(10px 10px 10px rgba(0, 0, 0, 0.6));
+            margin-left: -12px;
+        }
+    
+        .prevbutton:after {
+            content: '';
+            display: block;
+            width: 0;
+            height: 0;
+            border-top: 14px inset transparent;
+            border-bottom: 14px inset transparent;
+            border-right: 24px solid #222;
+            border-left: 0;
+            margin-left: 12px;
+        }
+
+        /*----------------------------------------
+         * next部分
+         *----------------------------------------*/
+
+         .nextbutton:before {
+            content: '';
+            display: block;
+            width: 0;
+            height: 0;
+            border-top: 14px inset transparent;
+            border-bottom: 14px inset transparent;
+            border-left: 24px solid #222;
+            border-right: 0;
+            margin-bottom: -28px;
+            filter: drop-shadow(10px 10px 10px rgba(0, 0, 0, 0.6));
+            margin-left: -10px;
+        }
+
+        .nextbutton:after {
+            content: '';
+            display: block;
+            width: 0;
+            height: 0;
+            border-top: 14px inset transparent;
+            border-bottom: 14px inset transparent;
+            border-left: 24px solid #222;
+            border-right: 0;
+            margin-left: 14px;
+        }
+
+        /*----------------------------------------
          * モーダル部分
          *----------------------------------------*/
         .main_container .ui_content {
@@ -266,5 +366,9 @@
             overflow: hidden;
             display: block;
             text-align: center;
+        }
+
+        .default {
+            margin: 0 auto;
         }
     }

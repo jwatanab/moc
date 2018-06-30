@@ -1,16 +1,10 @@
-import Client from '../commonUtil/Client'
-import assert, { throws } from 'assert'
-
 export default class Responsive {
 
     /**
-     * 
-     * @param {*} audio 
-     * @param {*} operation 
-     * @param {*} phone_btn 
-     * @param {*} option 
+     * @param {HTMLAudioElement} audio
+     * @param {boolean} operation 
      */
-    static operationAudio(audio, operation, phoneBtn, option = null) {
+    static operationAudio(audio, operation) {
         if (arguments.length < 2) {
             throw new RangeError("Not enough arguments")
         }
@@ -23,9 +17,6 @@ export default class Responsive {
         }
     }
 
-    /** 
-     * 
-    */
     static isSupport() {
         if (navigator.userAgent.indexOf('iPhone') > 0 && navigator.userAgent.indexOf('iPad') !== -1)
             return true
