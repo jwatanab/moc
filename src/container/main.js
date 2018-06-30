@@ -29,13 +29,15 @@ export default class Main extends React.Component {
             .then((res) => {
                 this.initData = res
                 this.asset.NODELIST_LENGTH = this.initData.length - 1
+                console.log('atrat')
 
                 Object.keys(this.initData).map(i => {
                     Promise.all([
                         Client.toUrl({
                             url: '/content',
                             request_name: this.initData[i].audioName,
-                            type: 'audio/mpeg3'
+                            type: 'audio/mp3'
+                            // type: `audio/${this.initData[i].type}`
                         }),
                         Client.toUrl({
                             url: '/main_init',

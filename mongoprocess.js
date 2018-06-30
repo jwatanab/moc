@@ -51,6 +51,7 @@ usersOperator = {
                     for (const i in docs) {
                         console.log(`audioName: ${docs[i].audioName}`)
                         console.log(`imgName:   ${docs[i].imgName}`)
+                        console.log(`type: ${docs[i].type}`)
                     }
                     client.close()
                     process.exit(0)
@@ -69,7 +70,8 @@ usersOperator = {
                 const collection = db.collection(documentName)
                 collection.insertMany([{
                     audioName: process.argv[3],
-                    imgName: process.argv[4]
+                    imgName: process.argv[4],
+                    type: process.argv[5]
                 }], (e, result) => {
                     assert.ifError(e)
                     assert.equal(1, result.result.n);
@@ -77,6 +79,31 @@ usersOperator = {
                     console.log(`Inserted 1 documents into the ${documentName}`);
                     client.close();
                 });
+            })
+        }
+    }, 'update': {
+        script: () => {
+            if (process.argv.length < 5) {
+                console.log("Usage: mongodb insert [audioName] [imgName]")
+                process.exit(-1)
+            }
+            MongoClient.connect(url, (e, client) => {
+                assert.ifError(e)
+                const db = client.db(dbName)
+                const collection = db.collection(documentName)
+                // collection.updateOne(), (e, result) => {
+                //     // assert.ifError(e)
+                //     // assert.equal(1, result.result.n);
+                //     // assert.equal(1, result.ops.length);
+                //     // console.log(`Inserted 1 documents into the ${documentName}`);
+                //     // client.close();
+                // });
+                collection.updateOne({ 'filename': process.argv[4], $set: { exe: process.argv[5] } }, (e, result) => {
+                    assert.ifError(e)
+                    assert.equal(1, result.result.n);
+                    assert.equal(1, result.ops.length);
+                    console.log(`Update 1 documents into the ${documentName}`);
+                })
             })
         }
     }, 'remove': {

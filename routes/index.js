@@ -14,13 +14,6 @@ router.get('/', (req, res, next) => {
     res.render('index')
 })
 
-router.post('/initilize', (req, res, next) => {
-    res.send([
-        "Wouldn't Wanna Be Swept Away",
-        "First(Consider the Lillies)"
-    ])
-})
-
 router.post('/init', (req, res) => {
     MongoClient.connect(url, (e, c) => {
         assert.ifError(e)
@@ -32,7 +25,8 @@ router.post('/init', (req, res) => {
             for (const i in docs) {
                 jsonAry.push({
                     audioName: docs[i].audioName,
-                    imgName: docs[i].imgName
+                    imgName: docs[i].imgName,
+                    type: docs[i].type
                 })
             }
             res.send(jsonAry)

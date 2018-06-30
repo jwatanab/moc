@@ -8,8 +8,6 @@ const Initialize = (audioName, imgName, main, c, imgSrc, audioSrc) => {
     else
         visibility = ' none'
 
-    console.log(audioName)
-
     return (
         <div className={`audio_content` + visibility} data-name={audioName} key={c}>
             <div className="content_bar">

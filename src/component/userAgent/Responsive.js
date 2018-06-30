@@ -14,7 +14,6 @@ export default class Responsive {
         if (arguments.length < 2) {
             throw new RangeError("Not enough arguments")
         }
-        console.log("Responsive")
         if (operation) {
             audio.parentElement.play()
         } else if (typeof operation === 'undifined') {
@@ -28,7 +27,6 @@ export default class Responsive {
      * 
     */
     static isSupport() {
-        console.log(navigator.userAgent)
         if (navigator.userAgent.indexOf('iPhone') > 0 && navigator.userAgent.indexOf('iPad') !== -1)
             return true
         else if (navigator.userAgent.indexOf('iPod') > 0)
