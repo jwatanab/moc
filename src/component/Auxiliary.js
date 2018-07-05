@@ -11,20 +11,22 @@ export default class Auxiliary extends React.Component {
      * @param {MouseEvent} e 
      */
     auxOperation(e, direction = null) {
+
         const real = document.querySelector('.real')
         if (!real) return
 
-        const target = real.querySelector('.img_content')
+        if (!this.main.asset.NODELIST_LENGTH)
+            this.main.asset.NODELIST_LENGTH = document.querySelectorAll(`.${this.main.asset.audioName}`).length - 1
+
+        const target = real.querySelector('.img')
         if (!direction) {
-            /**
-             * ここでスライドで操作するといろいろやっても再生から処理されるけど、ボタンでやると停止処理から入る
-             * ボタンで操作したあと最後まで再生が終了するとなぜか頭から再度始め始める
-             */
             this.main.operationUi({ target: target })
         } else if (direction === 'right') {
-            this.main.slideAnimation(target, 'right')
+            this.main.asset.direction = 'right'
+            this.main.slideController({ target: target })
         } else if (direction === 'left') {
-            this.main.slideAnimation(target, 'left')
+            this.main.asset.direction = 'left'
+            this.main.slideController({ target: target })
         } else {
 
         }

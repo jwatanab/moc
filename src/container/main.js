@@ -1,10 +1,11 @@
 import React from 'react'
 import Construction from '../component/commonUtil/Initialize'
+import Header from '../component/Header'
+import Auxiliary from '../component/Auxiliary'
 import Responsive from "../component/userAgent/Responsive"
 import Default from '../component/userAgent/Default'
 import Client from '../component/commonUtil/Client'
-import CSSTransitionGroup from 'react-addons-transition-group'
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
+import Loding from '../component/userAgent/Loding'
 import { VelocityTransitionGroup } from 'velocity-react'
 
 export default class Main extends React.Component {
@@ -20,6 +21,7 @@ export default class Main extends React.Component {
             MOVE_RKEY: -50,
             position: null,
             NODELIST_LENGTH: null,
+            audioName: 'audio_content',
             contentName: 'content_name'
         }
     }
@@ -28,6 +30,7 @@ export default class Main extends React.Component {
         Client.commonRequest('/init')
             .then((res) => {
                 this.initData = res
+                this.state.test = true
                 this.asset.NODELIST_LENGTH = this.initData.length - 1
 
                 Object.keys(this.initData).map(i => {
@@ -49,15 +52,31 @@ export default class Main extends React.Component {
                                 [res[i].excs]: res[i].url
                             })
                         ])
+                        console.log(this.asset.NODELIST_LENGTH)
                     }).catch((e) => {
-                        throw new e
+                        throw e
                     })
                 })
             })
     }
 
-    componentDidMount() {
-
+    shouldComponentUpdate() {
+        const canvas = document.querySelector('canvas')
+        if (canvas) {
+            canvas.style.transition = '1s'
+            canvas.style.opacity = '0'
+            setTimeout(() => {
+                this.setState({
+                    loadFlag: true
+                })
+            }, 700);
+        }
+        if (this.state.loadFlag) {
+            this.state.loadFlag = false
+            return true
+        } else {
+            return false
+        }
     }
 
     /**
@@ -80,44 +99,33 @@ export default class Main extends React.Component {
     }
 
     /**
-     * @param {TouchEvent} e 
+     * @param {HTMLDivElement} current 
      */
     slideController(e) {
         const currentId = e.target.className === this.asset.imgContent ? e.target.id : e.target.parentElement.id
         const current = document.querySelector(`#${currentId}`)
         const currentIndex = parseInt(current.dataset.index)
-        if (this.asset.direction == 'right') {
-            if (currentIndex === this.asset.NODELIST_LENGTH) return alert('max')
+        const viewText = document.querySelector(`.${this.asset.contentName}`)
 
-            this.slideAnimation(current, 'right')
-
-        } else if (this.asset.direction == 'left') {
+        if (this.asset.direction === 'right') {
+            if (currentIndex === this.asset.NODELIST_LENGTH)
+                return alert('max')
+        }
+        else if (this.asset.direction === 'left')
             if (currentIndex === 0) return alert("min")
 
-            this.slideAnimation(current, 'left')
-        } else {
-        }
-    }
-
-    /**
-     * @param {HTMLDivElement} current 
-     * @param {String} direction 
-     */
-    slideAnimation(current, direction) {
-        const viewText = document.querySelector(`.${this.asset.contentName}`)
-        const currentId = parseInt(current.dataset.index)
-        const currentParent = current.closest('.audio_content')
+        const currentParent = current.closest(`.${this.asset.audioName}`)
 
         let
             SLIDE_RKEY = null,
             SLIDE_LKEY = null,
             INCREMENT = null
 
-        if (direction === 'right') {
+        if (this.asset.direction === 'right') {
             SLIDE_RKEY = '400px'
             SLIDE_LKEY = '-400px'
             INCREMENT = 1
-        } else if (direction === 'left') {
+        } else if (this.asset.direction === 'left') {
             SLIDE_RKEY = '-400px'
             SLIDE_LKEY = '400px'
             INCREMENT = -1
@@ -125,18 +133,18 @@ export default class Main extends React.Component {
             return false
         }
 
-        const sibling = document.querySelector(`[data-index="${currentId + INCREMENT}"]`)
-        const siblingParent = sibling.closest('.audio_content')
+        const sibling = document.querySelector(`[data-index="${currentIndex + INCREMENT}"]`)
+        const siblingParent = sibling.closest(`.${this.asset.audioName}`)
         const name = siblingParent.dataset.name
 
         current.style.opacity = '0'
         current.style.left = SLIDE_RKEY
         setTimeout(() => {
             currentParent.style.display = 'none'
-            currentParent.className = 'audio_content'
+            currentParent.className = `${this.asset.audioName}`
             current.display = 'none'
             sibling.style.opacity = '0'
-            siblingParent.className = 'audio_content block real'
+            siblingParent.className = `${this.asset.audioName} block real`
             siblingParent.style.display = 'block'
             viewText.innerHTML = name
             setTimeout(() => {
@@ -286,20 +294,40 @@ export default class Main extends React.Component {
         } else {
 
         }
+
         if (this.flag) {
             return (
-                <main className="main_container">
-                    <div className="media_content">
-                        {bundle}
-                    </div>
-                    <div className="ui_content">
-                        <span className="content_name">Nine</span>
-                    </div>
-                </main>
+                <div>
+                    <Header />
+                    <main className="main_container">
+                        <div className="media_content">
+                            {bundle}
+                        </div>
+                        <div className="ui_content">
+                            <span className="content_name">Nine</span>
+                        </div>
+                    </main>
+                    <Auxiliary />
+                </div >
             )
         } else {
             return (
-                <div>Loding中</div>
+                <VelocityTransitionGroup
+                    runOnMount={true}
+                    enter={
+                        {
+                            animation: 'fadeIn',
+                            stagger: 100,
+                        }
+                    }
+                    leave={
+                        {
+                            animation: 'fadeOut',
+                            stagger: 700,
+                        }
+                    }>
+                    <Loding />
+                </VelocityTransitionGroup>
             )
         }
     }

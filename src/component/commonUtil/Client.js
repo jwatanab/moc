@@ -12,7 +12,6 @@ export default class Client {
                 .end((err, res) => {
                     assert.ifError(err)
                     const blob = new Blob([res.body], { type: require.type })
-                    console.log(blob)
                     const url = URL.createObjectURL(blob)
                     resolve({ url: url, excs: require.request_name })
                 })
