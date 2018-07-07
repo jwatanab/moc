@@ -1,8 +1,8 @@
 import React from 'react'
 import Construction from '../component/commonUtil/Initialize'
-import Header from '../component/Header'
-import Auxiliary from '../component/Auxiliary'
-import Responsive from "../component/userAgent/Responsive"
+import Header from '../component//Header'
+import Auxiliary from '../component//Auxiliary'
+import Responsive from '../component/userAgent/Responsive'
 import Default from '../component/userAgent/Default'
 import Client from '../component/commonUtil/Client'
 import Loding from '../component/userAgent/Loding'
@@ -291,6 +291,7 @@ export default class Main extends React.Component {
                 )
             })
             this.flag = true
+            console.log('xtart')
         } else {
 
         }
@@ -308,7 +309,7 @@ export default class Main extends React.Component {
                         </div>
                     </main>
                     <Auxiliary />
-                </div >
+                </div>
             )
         } else {
             return (

@@ -1,7 +1,7 @@
 import React from 'react'
-import React3 from 'react-three-renderer'
-import * as THREE from 'three'
-import ReactDOM from 'react-dom'
+import React3 from 'react-three-renderer';
+import * as THREE from 'three';
+import ReactDOM from 'react-dom';
 
 export default class Loding extends React.Component {
     constructor(props, context) {
@@ -50,6 +50,7 @@ export default class Loding extends React.Component {
                     near={0.1}
                     far={1000}
 
+
                     position={this.cameraPosition}
                 />
                 <mesh
@@ -61,10 +62,10 @@ export default class Loding extends React.Component {
                         depth={1}
                     />
                     <meshBasicMaterial
-                        color={0xaabb}
+                        color={0x00ffff}
                     />
                 </mesh>
             </scene>
-        </React3>);
+        </React3 >);
     }
 }
