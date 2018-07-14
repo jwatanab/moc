@@ -1,15 +1,16 @@
 import React from 'react'
+import ast from '../../component/Asset/Ast'
 
 const Initialize = (audioName, imgName, main, c, imgSrc, audioSrc) => {
     let visibility
 
     if (c === 0)
-        visibility = ' real'
+        visibility = ast.curtName
     else
-        visibility = ' none'
+        visibility = ast.noneName
 
     return (
-        <div className={`audio_content` + visibility} data-name={audioName} key={c}>
+        <div className={`audio_content ${visibility}`} data-name={audioName} key={c}>
             <div className="content_bar">
                 <div className="img_content" id={`node${c}`} data-index={c} onClick={(e) => main.operationUi(e)}>
                     <div className="border_bg"></div>

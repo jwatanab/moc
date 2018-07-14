@@ -13,7 +13,6 @@ export default class Default {
         } else if (typeof operation === 'undifined') {
             return
         } else {
-            console.log('default start')
             audio.parentElement.pause()
         }
     }

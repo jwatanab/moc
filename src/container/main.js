@@ -140,11 +140,14 @@ export default class Main extends React.Component {
         for (let i = 0; i < audioList.length; i++)
             if (audioList[i] !== e.target)
                 this.operationUi({ target: audioList[i] }, true)
+            else
+                console.log(this.state[audioList[i].parentElement.id])
+
     }
 
     /**
      * @param {TouchEvent} e 
-     * @param {boolean} recession 説明
+     * @param {boolean} recession 停止処理を行う際のフラグ
      */
     operationUi(e, recession = null) {
         // Each declaration
@@ -156,23 +159,22 @@ export default class Main extends React.Component {
         const audio = parent.querySelector('.notificationTone')
 
         // Individual processing
-        if (typeof this.state[parentId] === 'undefined') {
-            this.state[parentId] = {
-                ui_touch_flag: false,
-                operation_flag: false
-            }
+        if (typeof parent.dataset.isCilcked === 'undefined' &&
+            typeof parent.dataset.isInitialized === 'undefined') {
+            parent.dataset.isCilcked = 0
+            parent.dataset.isInitialized = 0
         }
 
         if (Responsive.isSupport()) {
-            // It saves the music element
+            // It stop the music
             if (recession) {
                 Responsive.operationAudio(audio, false)
                 border.style.opacity = ast.css.noneVal
-                return this.state[parentId].ui_touch_flag = false
+                return parent.dataset.isCilcked = 0
             }
 
             // Event Handler processing
-            if (this.state[parentId].ui_touch_flag) {
+            if (parseInt(parent.dataset.isCilcked)) {
                 pauseBtn.style.opacity = ast.css.dispVal
                 Responsive.operationAudio(audio, false)
 
@@ -184,13 +186,13 @@ export default class Main extends React.Component {
                 }, 100)
                 border.style.opacity = ast.css.noneVal
 
-                this.state[parentId].ui_touch_flag = false
+                parent.dataset.isCilcked = 0
             } else {
                 // init Event Handler
-                if (this.state[parentId].operation_flag)
+                if (parseInt(parent.dataset.isInitialized))
                     playBtn.style.opacity = ast.css.dispVal
                 Responsive.operationAudio(audio, true)
-                this.state[parentId].operation_flag = true
+                parent.dataset.isInitialized = 1
 
                 setTimeout(() => {
                     playBtn.style.transition = ast.css.utlTrsnVal
@@ -200,7 +202,7 @@ export default class Main extends React.Component {
                 }, 100)
                 border.style.opacity = ast.css.dispVal
 
-                this.state[parentId].ui_touch_flag = true
+                parent.dataset.isCilcked = 1
             }
         } else {
             // It saves the music element
@@ -259,6 +261,7 @@ export default class Main extends React.Component {
                     this.state[this.initData[i].audioName]
                 )
             })
+            // this.state = {}
             return (
                 <div>
                     <Header />

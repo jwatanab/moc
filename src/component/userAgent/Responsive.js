@@ -11,9 +11,10 @@ export default class Responsive {
         if (operation) {
             audio.parentElement.play()
         } else if (typeof operation === 'undifined') {
-            return
+            throw ReferenceError("operation is undifined")
         } else {
-            console.log('Responsive start')
+            // console.log('スタート2')
+            // console.log(audio.parentElement.paused)
             audio.parentElement.pause()
         }
     }

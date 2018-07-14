@@ -28,8 +28,6 @@ export default class Auxiliary extends React.Component {
         } else if (direction === ast.css.dircLft) {
             ast.direction = ast.css.dircLft
             this.main.slideController({ target: target })
-        } else {
-
         }
     }
 
