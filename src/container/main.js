@@ -165,6 +165,7 @@ export default class Main extends React.Component {
             if (recession) {
                 Responsive.operationAudio(audio, false)
                 border.style.opacity = ast.css.noneVal
+                parent.style.transform = "scale(1.0, 1.0)"
                 return parent.dataset.isCilcked = 0
             }
 
@@ -176,6 +177,7 @@ export default class Main extends React.Component {
                 setTimeout(() => {
                     pauseBtn.style.transition = ast.css.utlTrsnVal
                     pauseBtn.style.opacity = ast.css.noneVal
+                    parent.style.transform = "scale(1.0, 1.0)"
 
                     setTimeout(() =>
                         pauseBtn.setAttribute(ast.styleAttr, ast.css.setNoneOpcty), 300)
@@ -198,6 +200,7 @@ export default class Main extends React.Component {
                         playBtn.setAttribute(ast.styleAttr, ast.css.setNoneOpcty), 300)
                 }, 100)
                 border.style.opacity = ast.css.dispVal
+                parent.style.transform = "scale(1.1, 1.1)"
 
                 parent.dataset.isCilcked = 1
             }
@@ -248,9 +251,11 @@ export default class Main extends React.Component {
     render() {
         let content = this.initData
         let bundle
+        let contentName
 
         if (content) {
             bundle = Object.keys(this.initData).map((i, c, o) => {
+                if (c == 0) contentName = this.initData[i].audioName
                 return Construction(
                     this.initData[i].audioName,
                     this.initData[i].imgName,
@@ -269,7 +274,7 @@ export default class Main extends React.Component {
                             {bundle}
                         </div>
                         <div className="ui_content">
-                            <span className="content_name">Nine</span>
+                            <span className="content_name">{contentName}</span>
                         </div>
                     </main>
                     <Auxiliary />

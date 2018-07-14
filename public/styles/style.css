@@ -109,7 +109,7 @@
             left: 0;
             transition: .7s;
             display: block;
-            margin: 0 auto;
+            margin: 30px auto;
             font-size: 1.4em;
             height: 250px;
             width: 250px;
@@ -125,7 +125,8 @@
             border-radius: 9.3%;
             -moz-border-radius: 9.3%;
             -webkit-border-radius: 9.3%;
-            background: linear-gradient(to right, rgba(64, 165, 190, 0.6), rgba(61, 167, 61, 0.6));
+            background: rgba(66, 66, 66, 0.1);
+            filter: drop-shadow(21px 12px 30px rgba(22, 22, 22, 0.9));
         }
 
         .img_content .img {
