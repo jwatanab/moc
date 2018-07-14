@@ -39,7 +39,6 @@ export default class Main extends React.Component {
                             url: '/content',
                             request_name: this.initData[i].audioName,
                             type: 'audio/mp3'
-                            // type: `audio/${this.initData[i].type}`
                         }),
                         Client.toUrl({
                             url: '/main_init',
@@ -47,12 +46,8 @@ export default class Main extends React.Component {
                             type: 'image/jpeg'
                         })
                     ]).then((res) => {
-                        Object.keys(res).map(i => [
-                            this.setState({
-                                [res[i].excs]: res[i].url
-                            })
-                        ])
-                        console.log(this.asset.NODELIST_LENGTH)
+                        Object.keys(res).map(i => this.state[res[i].excs] = res[i].url)
+                        if (!this.state.loadFlag) this.setState({ loadFlag: true }) // shouldComponentUpdate呼び出し
                     }).catch((e) => {
                         throw e
                     })
@@ -65,18 +60,9 @@ export default class Main extends React.Component {
         if (canvas) {
             canvas.style.transition = '1s'
             canvas.style.opacity = '0'
-            setTimeout(() => {
-                this.setState({
-                    loadFlag: true
-                })
-            }, 700);
+            setTimeout(() => this.setState({}), 700) // render呼びだし
         }
-        if (this.state.loadFlag) {
-            this.state.loadFlag = false
-            return true
-        } else {
-            return false
-        }
+        return this.state.loadFlag
     }
 
     /**
@@ -291,7 +277,7 @@ export default class Main extends React.Component {
                 )
             })
             this.flag = true
-            console.log('xtart')
+            console.log('start')
         } else {
 
         }

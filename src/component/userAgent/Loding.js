@@ -2,6 +2,7 @@ import React from 'react'
 import React3 from 'react-three-renderer';
 import * as THREE from 'three';
 import ReactDOM from 'react-dom';
+import { Z_VERSION_ERROR } from 'zlib';
 
 export default class Loding extends React.Component {
     constructor(props, context) {
@@ -39,7 +40,7 @@ export default class Loding extends React.Component {
             mainCamera="camera" // this points to the perspectiveCamera which has the name set to "camera" below
             width={width}
             height={height}
-
+            clearColor={new THREE.Color(0xffffff)}
             onAnimate={this._onAnimate}
         >
             <scene>
@@ -49,7 +50,6 @@ export default class Loding extends React.Component {
                     aspect={width / height}
                     near={0.1}
                     far={1000}
-
 
                     position={this.cameraPosition}
                 />
