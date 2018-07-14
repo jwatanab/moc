@@ -36,7 +36,7 @@ export default class Main extends React.Component {
                         })
                     ]).then((res) => {
                         Object.keys(res).map(i => this.state[res[i].excs] = res[i].url)
-                        if (!this.state.loadFlag) this.setState({ loadFlag: true }) // shouldComponentUpdate呼び出し
+                        if (!this.state.loadFlag) this.setState({ loadFlag: true }) // call shouldComponentUpdate
                     }).catch((e) => { throw e })
                 })
             })
@@ -47,7 +47,7 @@ export default class Main extends React.Component {
         if (canvas) {
             canvas.style.transition = ast.css.fdOutVal
             canvas.style.opacity = ast.css.noneVal
-            setTimeout(() => this.setState({}), 700) // render呼びだし
+            setTimeout(() => this.setState({}), 700) // call render
         }
         return this.state.loadFlag
     }
@@ -103,8 +103,6 @@ export default class Main extends React.Component {
             SLIDE_RKEY = `-${ast.slideval}`
             SLIDE_LKEY = ast.slideval
             INCREMENT = -1
-        } else {
-            return false
         }
 
         const sibling = document.querySelector(`[data-index="${currentIndex + INCREMENT}"]`)
@@ -140,14 +138,11 @@ export default class Main extends React.Component {
         for (let i = 0; i < audioList.length; i++)
             if (audioList[i] !== e.target)
                 this.operationUi({ target: audioList[i] }, true)
-            else
-                console.log(this.state[audioList[i].parentElement.id])
-
     }
 
     /**
      * @param {TouchEvent} e 
-     * @param {boolean} recession 停止処理を行う際のフラグ
+     * @param {boolean} recession
      */
     operationUi(e, recession = null) {
         // Each declaration
@@ -158,9 +153,9 @@ export default class Main extends React.Component {
         const border = parent.querySelector('.border_bg')
         const audio = parent.querySelector('.notificationTone')
 
-        // Individual processing
-        if (typeof parent.dataset.isCilcked === 'undefined' &&
-            typeof parent.dataset.isInitialized === 'undefined') {
+        // Set the ui operation for the attribute
+        if (typeof parent.dataset.isCilcked === ast.undefVal &&
+            typeof parent.dataset.isInitialized === ast.undefVal) {
             parent.dataset.isCilcked = 0
             parent.dataset.isInitialized = 0
         }
@@ -182,13 +177,14 @@ export default class Main extends React.Component {
                     pauseBtn.style.transition = ast.css.utlTrsnVal
                     pauseBtn.style.opacity = ast.css.noneVal
 
-                    setTimeout(() => pauseBtn.setAttribute(ast.styleAttr, ast.css.setNoneOpcty), 300)
+                    setTimeout(() =>
+                        pauseBtn.setAttribute(ast.styleAttr, ast.css.setNoneOpcty), 300)
                 }, 100)
                 border.style.opacity = ast.css.noneVal
 
                 parent.dataset.isCilcked = 0
             } else {
-                // init Event Handler
+                // fade out the play button
                 if (parseInt(parent.dataset.isInitialized))
                     playBtn.style.opacity = ast.css.dispVal
                 Responsive.operationAudio(audio, true)
@@ -198,7 +194,8 @@ export default class Main extends React.Component {
                     playBtn.style.transition = ast.css.utlTrsnVal
                     playBtn.style.opacity = ast.css.noneVal
 
-                    setTimeout(() => playBtn.setAttribute(ast.styleAttr, ast.css.setNoneOpcty), 300)
+                    setTimeout(() =>
+                        playBtn.setAttribute(ast.styleAttr, ast.css.setNoneOpcty), 300)
                 }, 100)
                 border.style.opacity = ast.css.dispVal
 
@@ -209,11 +206,11 @@ export default class Main extends React.Component {
             if (recession) {
                 Default.operationAudio(audio, false)
                 border.style.opacity = ast.css.noneVal
-                return this.state[parentId].ui_touch_flag = false
+                return parent.dataset.isCilcked = 0
             }
 
             // Event Handler processing
-            if (this.state[parentId].ui_touch_flag) {
+            if (parseInt(parent.dataset.isCilcked)) {
                 pauseBtn.style.opacity = ast.css.dispVal
                 Default.operationAudio(audio, false)
 
@@ -221,27 +218,29 @@ export default class Main extends React.Component {
                     pauseBtn.style.transition = ast.css.utlTrsnVal
                     pauseBtn.style.opacity = ast.css.noneVal
 
-                    setTimeout(() => pauseBtn.setAttribute(ast.styleAttr, ast.css.setNoneOpcty), 300)
+                    setTimeout(() =>
+                        pauseBtn.setAttribute(ast.styleAttr, ast.css.setNoneOpcty), 300)
                 }, 100)
                 border.style.opacity = ast.css.noneVal
 
-                this.state[parentId].ui_touch_flag = false
+                parent.dataset.isCilcked = 0
             } else {
                 // init Event Handler
-                if (this.state[parentId].operation_flag)
+                if (parseInt(parent.dataset.isInitialized))
                     playBtn.style.opacity = ast.css.noneVal
                 Default.operationAudio(audio, true)
-                this.state[parentId].operation_flag = true
+                parent.dataset.isInitialized = 1
 
                 setTimeout(() => {
                     playBtn.style.transition = ast.css.utlTrsnVal
                     playBtn.style.opacity = ast.css.noneVal
 
-                    setTimeout(() => playBtn.setAttribute(ast.styleAttr, ast.css.setNoneOpcty), 300)
+                    setTimeout(() =>
+                        playBtn.setAttribute(ast.styleAttr, ast.css.setNoneOpcty), 300)
                 }, 100)
                 border.style.opacity = ast.css.dispVal
 
-                this.state[parentId].ui_touch_flag = true
+                parent.dataset.isCilcked = 1
             }
         }
     }

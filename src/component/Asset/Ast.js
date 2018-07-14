@@ -6,7 +6,7 @@ export default {
     NODELIST_LENGTH: null,
     audioName: 'audio_content',
     contentName: 'content_name',
-    imgContent: 'img_contentn',
+    imgContent: 'img_content',
     imgName: 'img',
     noneName: 'none',
     curtName: 'real',
@@ -15,6 +15,7 @@ export default {
     audioElm: 'audio',
     canvasElm: 'canvas',
     styleAttr: 'style',
+    undefVal: 'undefined',
     css: {
         dispVal: '1',
         noneVal: '0',

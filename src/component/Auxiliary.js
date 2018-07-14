@@ -12,7 +12,6 @@ export default class Auxiliary extends React.Component {
      * @param {MouseEvent} e 
      */
     auxOperation(e, direction = null) {
-
         const real = document.querySelector(`.${ast.curtName}`)
         if (!real) return
 

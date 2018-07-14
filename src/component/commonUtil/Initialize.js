@@ -10,9 +10,9 @@ const Initialize = (audioName, imgName, main, c, imgSrc, audioSrc) => {
         visibility = ast.noneName
 
     return (
-        <div className={`audio_content ${visibility}`} data-name={audioName} key={c}>
+        <div className={`${ast.audioName} ${visibility}`} data-name={audioName} key={c}>
             <div className="content_bar">
-                <div className="img_content" id={`node${c}`} data-index={c} onClick={(e) => main.operationUi(e)}>
+                <div className={ast.imgContent} id={`node${c}`} data-index={c} onClick={(e) => main.operationUi(e)}>
                     <div className="border_bg"></div>
                     <img className="img"
                         id={imgName}

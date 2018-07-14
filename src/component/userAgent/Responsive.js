@@ -10,22 +10,15 @@ export default class Responsive {
         }
         if (operation) {
             audio.parentElement.play()
+            window.alert("Success")
         } else if (typeof operation === 'undifined') {
             throw ReferenceError("operation is undifined")
         } else {
-            // console.log('スタート2')
-            // console.log(audio.parentElement.paused)
             audio.parentElement.pause()
         }
     }
 
     static isSupport() {
-        if (/iPhone/.test(navigator.userAgent) || /iPad/.test(navigator.userAgent))
-            return true
-        else if (navigator.userAgent.indexOf('iPod') > 0)
-            return true
-        else if (navigator.userAgent.indexOf('Android') > 0)
-            return true
-        else return false
+        return /iPhone | iPad | iPhone | Android/.test(navigator.userAgent)
     }
 }
