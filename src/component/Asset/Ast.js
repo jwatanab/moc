@@ -1,0 +1,37 @@
+export default {
+    direction: '',
+    MOVE_LKEY: 50,
+    MOVE_RKEY: -50,
+    position: null,
+    NODELIST_LENGTH: null,
+    audioName: 'audio_content',
+    contentName: 'content_name',
+    imgContent: 'img_contentn',
+    imgName: 'img',
+    noneName: 'none',
+    curtName: 'real',
+    blckName: 'block',
+    slideval: '400px',
+    audioElm: 'audio',
+    canvasElm: 'canvas',
+    styleAttr: 'style',
+    css: {
+        dispVal: '1',
+        noneVal: '0',
+        nonePxVal: '0px',
+        fdOutVal: '1s',
+        utlTrsnVal: '.7s',
+        dircRgt: 'right',
+        dircLft: 'left',
+        setNoneOpcty: 'opacity: 0;',
+    },
+    url: {
+        img: '/content',
+        audio: '/main_init',
+        init: '/init',
+    },
+    extension: {
+        img: 'image/jpeg',
+        audio: 'audio/mp3',
+    }
+}

@@ -13,12 +13,13 @@ export default class Responsive {
         } else if (typeof operation === 'undifined') {
             return
         } else {
+            console.log('Responsive start')
             audio.parentElement.pause()
         }
     }
 
     static isSupport() {
-        if (navigator.userAgent.indexOf('iPhone') > 0 && navigator.userAgent.indexOf('iPad') !== -1)
+        if (/iPhone/.test(navigator.userAgent) || /iPad/.test(navigator.userAgent))
             return true
         else if (navigator.userAgent.indexOf('iPod') > 0)
             return true

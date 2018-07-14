@@ -6,60 +6,47 @@ import Responsive from '../component/userAgent/Responsive'
 import Default from '../component/userAgent/Default'
 import Client from '../component/commonUtil/Client'
 import Loding from '../component/userAgent/Loding'
+import ast from '../component/Asset/Ast'
 import { VelocityTransitionGroup } from 'velocity-react'
 
 export default class Main extends React.Component {
     constructor(props) {
         super(props)
-        this.state = {
-            loadFlag: false,
-        }
+        this.state = { loadFlag: false, }
         this.initData = null
-        this.asset = {
-            direction: '',
-            MOVE_LKEY: 50,
-            MOVE_RKEY: -50,
-            position: null,
-            NODELIST_LENGTH: null,
-            audioName: 'audio_content',
-            contentName: 'content_name'
-        }
     }
 
     componentWillMount() {
-        Client.commonRequest('/init')
+        Client.commonRequest(ast.url.init)
             .then((res) => {
                 this.initData = res
-                this.state.test = true
-                this.asset.NODELIST_LENGTH = this.initData.length - 1
+                ast.NODELIST_LENGTH = this.initData.length - 1
 
                 Object.keys(this.initData).map(i => {
                     Promise.all([
                         Client.toUrl({
-                            url: '/content',
+                            url: ast.url.img,
                             request_name: this.initData[i].audioName,
-                            type: 'audio/mp3'
+                            type: ast.extension.img
                         }),
                         Client.toUrl({
-                            url: '/main_init',
+                            url: ast.url.audio,
                             request_name: this.initData[i].imgName,
-                            type: 'image/jpeg'
+                            type: ast.extension.audio
                         })
                     ]).then((res) => {
                         Object.keys(res).map(i => this.state[res[i].excs] = res[i].url)
                         if (!this.state.loadFlag) this.setState({ loadFlag: true }) // shouldComponentUpdate呼び出し
-                    }).catch((e) => {
-                        throw e
-                    })
+                    }).catch((e) => { throw e })
                 })
             })
     }
 
     shouldComponentUpdate() {
-        const canvas = document.querySelector('canvas')
+        const canvas = document.querySelector(ast.canvasElm)
         if (canvas) {
-            canvas.style.transition = '1s'
-            canvas.style.opacity = '0'
+            canvas.style.transition = ast.css.fdOutVal
+            canvas.style.opacity = ast.css.noneVal
             setTimeout(() => this.setState({}), 700) // render呼びだし
         }
         return this.state.loadFlag
@@ -69,18 +56,18 @@ export default class Main extends React.Component {
      * @param {TouchEvent} e 
      */
     getPosition(e) {
-        this.asset.position = e.touches[0].pageX
-        this.asset.direction = ''
+        ast.position = e.touches[0].pageX
+        ast.direction = ''
     }
 
     /**
      * @param {TouchEvent} e 
      */
     setPosition(e) {
-        if (this.asset.position - e.touches[0].pageX > this.asset.MOVE_LKEY) {
-            this.asset.direction = 'left'
-        } else if (this.asset.position - e.touches[0].pageX < this.asset.MOVE_RKEY) {
-            this.asset.direction = 'right'
+        if (ast.position - e.touches[0].pageX > ast.MOVE_LKEY) {
+            ast.direction = ast.css.dircLft
+        } else if (ast.position - e.touches[0].pageX < ast.MOVE_RKEY) {
+            ast.direction = ast.css.dircRgt
         }
     }
 
@@ -88,57 +75,58 @@ export default class Main extends React.Component {
      * @param {HTMLDivElement} current 
      */
     slideController(e) {
-        const currentId = e.target.className === this.asset.imgContent ? e.target.id : e.target.parentElement.id
+        const currentId = e.target.className === ast.imgContent ? e.target.id : e.target.parentElement.id
         const current = document.querySelector(`#${currentId}`)
         const currentIndex = parseInt(current.dataset.index)
-        const viewText = document.querySelector(`.${this.asset.contentName}`)
+        const viewText = document.querySelector(`.${ast.contentName}`)
 
-        if (this.asset.direction === 'right') {
-            if (currentIndex === this.asset.NODELIST_LENGTH)
+        if (ast.direction === ast.css.dircRgt)
+            if (currentIndex === ast.NODELIST_LENGTH)
                 return alert('max')
-        }
-        else if (this.asset.direction === 'left')
-            if (currentIndex === 0) return alert("min")
 
-        const currentParent = current.closest(`.${this.asset.audioName}`)
+        if (ast.direction === ast.css.dircLft)
+            if (currentIndex === 0)
+                return alert("min")
+
+        const currentParent = current.closest(`.${ast.audioName}`)
 
         let
             SLIDE_RKEY = null,
             SLIDE_LKEY = null,
             INCREMENT = null
 
-        if (this.asset.direction === 'right') {
-            SLIDE_RKEY = '400px'
-            SLIDE_LKEY = '-400px'
+        if (ast.direction === ast.css.dircRgt) {
+            SLIDE_RKEY = ast.slideval
+            SLIDE_LKEY = `-${ast.slideval}`
             INCREMENT = 1
-        } else if (this.asset.direction === 'left') {
-            SLIDE_RKEY = '-400px'
-            SLIDE_LKEY = '400px'
+        } else if (ast.direction === ast.css.dircLft) {
+            SLIDE_RKEY = `-${ast.slideval}`
+            SLIDE_LKEY = ast.slideval
             INCREMENT = -1
         } else {
             return false
         }
 
         const sibling = document.querySelector(`[data-index="${currentIndex + INCREMENT}"]`)
-        const siblingParent = sibling.closest(`.${this.asset.audioName}`)
+        const siblingParent = sibling.closest(`.${ast.audioName}`)
         const name = siblingParent.dataset.name
 
-        current.style.opacity = '0'
+        current.style.opacity = ast.css.noneVal
         current.style.left = SLIDE_RKEY
         setTimeout(() => {
-            currentParent.style.display = 'none'
-            currentParent.className = `${this.asset.audioName}`
-            current.display = 'none'
-            sibling.style.opacity = '0'
-            siblingParent.className = `${this.asset.audioName} block real`
-            siblingParent.style.display = 'block'
+            currentParent.style.display = ast.noneName
+            currentParent.className = ast.audioName
+            current.display = ast.noneName
+            sibling.style.opacity = ast.css.noneVal
+            siblingParent.className = `${ast.audioName} ${ast.blckName} ${ast.curtName}`
+            siblingParent.style.display = ast.blckName
             viewText.innerHTML = name
             setTimeout(() => {
-                sibling.style.display = 'block'
+                sibling.style.display = ast.blckName
                 sibling.style.left = SLIDE_LKEY
                 setTimeout(() => {
-                    sibling.style.opacity = '1'
-                    sibling.style.left = '0px'
+                    sibling.style.opacity = ast.css.dispVal
+                    sibling.style.left = ast.css.nonePxVal
                 }, 100)
             })
         }, 500)
@@ -148,7 +136,7 @@ export default class Main extends React.Component {
      * @param {SyntheticEvent} e
      */
     playHandler(e) {
-        const audioList = document.querySelectorAll('audio')
+        const audioList = document.querySelectorAll(ast.audioElm)
         for (let i = 0; i < audioList.length; i++)
             if (audioList[i] !== e.target)
                 this.operationUi({ target: audioList[i] }, true)
@@ -160,7 +148,7 @@ export default class Main extends React.Component {
      */
     operationUi(e, recession = null) {
         // Each declaration
-        const parentId = e.target.className === 'img_content' ? e.target.id : e.target.parentElement.id
+        const parentId = e.target.className === ast.imgContent ? e.target.id : e.target.parentElement.id
         const parent = document.querySelector(`#${parentId}`)
         const playBtn = parent.querySelector('.test')
         const pauseBtn = parent.querySelector('.p_test')
@@ -168,95 +156,90 @@ export default class Main extends React.Component {
         const audio = parent.querySelector('.notificationTone')
 
         // Individual processing
-        if (eval(`typeof this.state.${parentId}`) === 'undefined') {
-            eval(`this.state.${parentId} = {
+        if (typeof this.state[parentId] === 'undefined') {
+            this.state[parentId] = {
                 ui_touch_flag: false,
                 operation_flag: false
-            }`)
+            }
         }
 
         if (Responsive.isSupport()) {
             // It saves the music element
             if (recession) {
-                border.style.opacity = '0'
-                return eval(`this.state.${parentId}.ui_touch_flag = false`)
+                Responsive.operationAudio(audio, false)
+                border.style.opacity = ast.css.noneVal
+                return this.state[parentId].ui_touch_flag = false
             }
 
             // Event Handler processing
-            if (eval(`this.state.${parentId}.ui_touch_flag`)) {
-                pauseBtn.style.opacity = '1'
+            if (this.state[parentId].ui_touch_flag) {
+                pauseBtn.style.opacity = ast.css.dispVal
                 Responsive.operationAudio(audio, false)
 
                 setTimeout(() => {
-                    pauseBtn.style.transition = '.7s'
-                    pauseBtn.style.opacity = '0'
+                    pauseBtn.style.transition = ast.css.utlTrsnVal
+                    pauseBtn.style.opacity = ast.css.noneVal
 
-                    setTimeout(() => pauseBtn.setAttribute('style', 'opacity: 0;'), 300)
+                    setTimeout(() => pauseBtn.setAttribute(ast.styleAttr, ast.css.setNoneOpcty), 300)
                 }, 100)
-                border.style.opacity = '0'
+                border.style.opacity = ast.css.noneVal
 
-                eval(`this.state.${parentId}.ui_touch_flag = false`)
+                this.state[parentId].ui_touch_flag = false
             } else {
                 // init Event Handler
-                if (eval(`this.state.${parentId}.operation_flag`)) {
-                    playBtn.style.opacity = '1'
-                    Responsive.operationAudio(audio, true)
-                } else {
-                    Responsive.operationAudio(audio, true)
-                    eval(`this.state.${parentId}.operation_flag = true`)
-                }
+                if (this.state[parentId].operation_flag)
+                    playBtn.style.opacity = ast.css.dispVal
+                Responsive.operationAudio(audio, true)
+                this.state[parentId].operation_flag = true
 
                 setTimeout(() => {
-                    playBtn.style.transition = '.7s'
-                    playBtn.style.opacity = '0'
+                    playBtn.style.transition = ast.css.utlTrsnVal
+                    playBtn.style.opacity = ast.css.noneVal
 
-                    setTimeout(() => playBtn.setAttribute('style', 'opacity: 0;'), 300)
+                    setTimeout(() => playBtn.setAttribute(ast.styleAttr, ast.css.setNoneOpcty), 300)
                 }, 100)
-                border.style.opacity = '1'
+                border.style.opacity = ast.css.dispVal
 
-                eval(`this.state.${parentId}.ui_touch_flag = true`)
+                this.state[parentId].ui_touch_flag = true
             }
         } else {
             // It saves the music element
             if (recession) {
                 Default.operationAudio(audio, false)
-                border.style.opacity = '0'
-                return eval(`this.state.${parentId}.ui_touch_flag = false`)
+                border.style.opacity = ast.css.noneVal
+                return this.state[parentId].ui_touch_flag = false
             }
 
             // Event Handler processing
-            if (eval(`this.state.${parentId}.ui_touch_flag`)) {
-                pauseBtn.style.opacity = '1'
+            if (this.state[parentId].ui_touch_flag) {
+                pauseBtn.style.opacity = ast.css.dispVal
                 Default.operationAudio(audio, false)
 
                 setTimeout(() => {
-                    pauseBtn.style.transition = '.7s'
-                    pauseBtn.style.opacity = '0'
+                    pauseBtn.style.transition = ast.css.utlTrsnVal
+                    pauseBtn.style.opacity = ast.css.noneVal
 
-                    setTimeout(() => pauseBtn.setAttribute('style', 'opacity: 0;'), 300)
+                    setTimeout(() => pauseBtn.setAttribute(ast.styleAttr, ast.css.setNoneOpcty), 300)
                 }, 100)
-                border.style.opacity = '0'
+                border.style.opacity = ast.css.noneVal
 
-                eval(`this.state.${parentId}.ui_touch_flag = false`)
+                this.state[parentId].ui_touch_flag = false
             } else {
                 // init Event Handler
-                if (eval(`this.state.${parentId}.operation_flag`)) {
-                    playBtn.style.opacity = '1'
-                    Default.operationAudio(audio, true)
-                } else {
-                    Default.operationAudio(audio, true)
-                    eval(`this.state.${parentId}.operation_flag = true`)
-                }
+                if (this.state[parentId].operation_flag)
+                    playBtn.style.opacity = ast.css.noneVal
+                Default.operationAudio(audio, true)
+                this.state[parentId].operation_flag = true
 
                 setTimeout(() => {
-                    playBtn.style.transition = '.7s'
-                    playBtn.style.opacity = '0'
+                    playBtn.style.transition = ast.css.utlTrsnVal
+                    playBtn.style.opacity = ast.css.noneVal
 
-                    setTimeout(() => playBtn.setAttribute('style', 'opacity: 0;'), 300)
+                    setTimeout(() => playBtn.setAttribute(ast.styleAttr, ast.css.setNoneOpcty), 300)
                 }, 100)
-                border.style.opacity = '1'
+                border.style.opacity = ast.css.dispVal
 
-                eval(`this.state.${parentId}.ui_touch_flag = true`)
+                this.state[parentId].ui_touch_flag = true
             }
         }
     }
@@ -276,13 +259,6 @@ export default class Main extends React.Component {
                     this.state[this.initData[i].audioName]
                 )
             })
-            this.flag = true
-            console.log('start')
-        } else {
-
-        }
-
-        if (this.flag) {
             return (
                 <div>
                     <Header />
@@ -301,18 +277,14 @@ export default class Main extends React.Component {
             return (
                 <VelocityTransitionGroup
                     runOnMount={true}
-                    enter={
-                        {
-                            animation: 'fadeIn',
-                            stagger: 100,
-                        }
-                    }
-                    leave={
-                        {
-                            animation: 'fadeOut',
-                            stagger: 700,
-                        }
-                    }>
+                    enter={{
+                        animation: 'fadeIn',
+                        stagger: 100,
+                    }}
+                    leave={{
+                        animation: 'fadeOut',
+                        stagger: 700,
+                    }}>
                     <Loding />
                 </VelocityTransitionGroup>
             )

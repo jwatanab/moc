@@ -1,4 +1,5 @@
 import React from 'react'
+import ast from '../component/Asset/Ast'
 import Main from '../container/main'
 
 export default class Auxiliary extends React.Component {
@@ -12,20 +13,20 @@ export default class Auxiliary extends React.Component {
      */
     auxOperation(e, direction = null) {
 
-        const real = document.querySelector('.real')
+        const real = document.querySelector(`.${ast.curtName}`)
         if (!real) return
 
-        if (!this.main.asset.NODELIST_LENGTH)
-            this.main.asset.NODELIST_LENGTH = document.querySelectorAll(`.${this.main.asset.audioName}`).length - 1
+        if (!ast.css.NODELIST_LENGTH)
+            ast.css.NODELIST_LENGTH = document.querySelectorAll(`.${ast.audioName}`).length - 1
 
-        const target = real.querySelector('.img')
+        const target = real.querySelector(`.${ast.imgName}`)
         if (!direction) {
             this.main.operationUi({ target: target })
-        } else if (direction === 'right') {
-            this.main.asset.direction = 'right'
+        } else if (direction === ast.css.dircRgt) {
+            ast.direction = ast.css.dircRgt
             this.main.slideController({ target: target })
-        } else if (direction === 'left') {
-            this.main.asset.direction = 'left'
+        } else if (direction === ast.css.dircLft) {
+            ast.direction = ast.css.dircLft
             this.main.slideController({ target: target })
         } else {
 
@@ -36,13 +37,13 @@ export default class Auxiliary extends React.Component {
         return (
             <div className="controll_bar">
                 <div className="wrapper_button">
-                    <div className="prevbutton" onClick={(e) => this.auxOperation(e, 'right')}></div>
+                    <div className="prevbutton" onClick={(e) => this.auxOperation(e, ast.css.dircRgt)}></div>
                 </div>
                 <div className="wrapper_button">
                     <div className="playbutton" onClick={(e) => this.auxOperation(e)}></div>
                 </div>
                 <div className="wrapper_button">
-                    <div className="nextbutton" onClick={(e) => this.auxOperation(e, 'left')}></div>
+                    <div className="nextbutton" onClick={(e) => this.auxOperation(e, ast.css.dircLft)}></div>
                 </div>
             </div>
         )
