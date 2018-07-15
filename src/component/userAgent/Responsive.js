@@ -17,7 +17,6 @@ export default class Responsive {
             throw new RangeError("Not enough arguments")
 
         if (operation) {
-            window.alert(audio.src)
             audio.parentElement.play()
         } else if (typeof operation === 'undifined') {
             throw ReferenceError("operation is undifined")

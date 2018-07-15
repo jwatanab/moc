@@ -1,149 +1,176 @@
 import React from 'react'
 import Construction from '../component/commonUtil/Initialize'
-import Header from '../component//Header'
-import Auxiliary from '../component//Auxiliary'
-import Responsive from '../component/userAgent/Responsive'
+import Responsive from "../component/userAgent/Responsive"
 import Default from '../component/userAgent/Default'
 import Client from '../component/commonUtil/Client'
-import Loding from '../component/userAgent/Loding'
-import ast from '../component/Asset/Ast'
+import Header from '../component/Header'
+import ast from "../component/Asset/Ast"
 import { VelocityTransitionGroup } from 'velocity-react'
 
 export default class Main extends React.Component {
     constructor(props) {
         super(props)
-        this.state = { loadFlag: false, }
+        this.state = {
+            loadFlag: false,
+        }
         this.initData = null
+        this.asset = {
+            direction: '',
+            MOVE_LKEY: 50,
+            MOVE_RKEY: -50,
+            position: null,
+            NODELIST_LENGTH: null,
+            contentName: 'content_name'
+        }
     }
 
     componentWillMount() {
-        Client.commonRequest(ast.url.init)
+        Client.commonRequest('/init')
             .then((res) => {
                 this.initData = res
-                ast.NODELIST_LENGTH = this.initData.length - 1
+                this.asset.NODELIST_LENGTH = this.initData.length - 1
 
                 Object.keys(this.initData).map(i => {
                     Promise.all([
                         Client.toUrl({
-                            url: ast.url.img,
+                            url: '/content',
                             request_name: this.initData[i].audioName,
-                            type: ast.extension.img
+                            type: 'audio/mp3'
+                            // type: `audio/${this.initData[i].type}`
                         }),
                         Client.toUrl({
-                            url: ast.url.audio,
+                            url: '/main_init',
                             request_name: this.initData[i].imgName,
-                            type: ast.extension.audio
+                            type: 'image/jpeg'
                         })
                     ]).then((res) => {
-                        Object.keys(res).map(i => this.state[res[i].excs] = res[i].url)
-                        if (!this.state.loadFlag) this.setState({ loadFlag: true }) // call shouldComponentUpdate
-                    }).catch((e) => { throw e })
+                        Object.keys(res).map(i => [
+                            this.setState({
+                                [res[i].audioName]: res[i].url
+                            })
+                        ])
+                    }).catch((e) => {
+                        throw e
+                    })
                 })
             })
     }
 
-    shouldComponentUpdate() {
-        const canvas = document.querySelector(ast.canvasElm)
-        if (canvas) {
-            canvas.style.transition = ast.css.fdOutVal
-            canvas.style.opacity = ast.css.noneVal
-            setTimeout(() => this.setState({}), 700) // call render
-        }
-        return this.state.loadFlag
+    componentDidMount() {
+
     }
 
-    /**
-     * @param {TouchEvent} e 
-     */
     getPosition(e) {
-        ast.position = e.touches[0].pageX
-        ast.direction = ''
+        this.asset.position = e.touches[0].pageX
+        this.asset.direction = ''
     }
 
-    /**
-     * @param {TouchEvent} e 
-     */
     setPosition(e) {
-        if (ast.position - e.touches[0].pageX > ast.MOVE_LKEY) {
-            ast.direction = ast.css.dircLft
-        } else if (ast.position - e.touches[0].pageX < ast.MOVE_RKEY) {
-            ast.direction = ast.css.dircRgt
+        if (this.asset.position - e.touches[0].pageX > this.asset.MOVE_LKEY) {
+            this.asset.direction = 'left'
+        } else if (this.asset.position - e.touches[0].pageX < this.asset.MOVE_RKEY) {
+            this.asset.direction = 'right'
+        }
+    }
+
+    slideController(e) {
+        const currentId = e.target.className === this.asset.imgContent ? e.target.id : e.target.parentElement.id
+        const current = document.querySelector(`#${currentId}`)
+        const viewText = document.querySelector(`.${this.asset.contentName}`)
+        const currentIndex = parseInt(current.dataset.index)
+        if (this.asset.direction == 'right') {
+            if (currentIndex === this.asset.NODELIST_LENGTH) return alert('最大件数')
+
+            this.slideAnimation(current, viewText, 'right')
+
+        } else if (this.asset.direction == 'left') {
+            if (currentId === 0) return alert("零")
+
+            this.slideAnimation(current, viewText, 'left')
+        } else {
         }
     }
 
     /**
-     * @param {HTMLDivElement} current 
+     * @param {HTMLElement} current 
+     * @param {HTMLElement} viewText 
+     * @param {String} direction 
      */
-    slideController(e) {
-        const currentId = e.target.className === ast.imgContent ? e.target.id : e.target.parentElement.id
-        const current = document.querySelector(`#${currentId}`)
-        const currentIndex = parseInt(current.dataset.index)
-        const viewText = document.querySelector(`.${ast.contentName}`)
+    slideAnimation(current, viewText, direction) {
 
-        if (ast.direction === ast.css.dircRgt)
-            if (currentIndex === ast.NODELIST_LENGTH)
-                return alert('max')
-
-        if (ast.direction === ast.css.dircLft)
-            if (currentIndex === 0)
-                return alert("min")
-
-        const currentParent = current.closest(`.${ast.audioName}`)
+        const currentId = parseInt(current.dataset.index)
+        const currentParent = current.closest('.audio_content')
 
         let
             SLIDE_RKEY = null,
             SLIDE_LKEY = null,
             INCREMENT = null
 
-        if (ast.direction === ast.css.dircRgt) {
-            SLIDE_RKEY = ast.slideval
-            SLIDE_LKEY = `-${ast.slideval}`
+        if (direction === 'right') {
+            SLIDE_RKEY = '400px'
+            SLIDE_LKEY = '-400px'
             INCREMENT = 1
-        } else if (ast.direction === ast.css.dircLft) {
-            SLIDE_RKEY = `-${ast.slideval}`
-            SLIDE_LKEY = ast.slideval
+        } else if (direction === 'left') {
+            SLIDE_RKEY = '-400px'
+            SLIDE_LKEY = '400px'
             INCREMENT = -1
+        } else {
+            return false
         }
 
-        const sibling = document.querySelector(`[data-index="${currentIndex + INCREMENT}"]`)
-        const siblingParent = sibling.closest(`.${ast.audioName}`)
-        const name = siblingParent.dataset.name
+        const next = document.querySelector(`[data-index="${currentId + INCREMENT}"]`)
+        const nextParent = next.closest('.audio_content')
+        const name = nextParent.dataset.name
 
-        current.style.opacity = ast.css.noneVal
+        current.style.opacity = '0'
         current.style.left = SLIDE_RKEY
         setTimeout(() => {
-            currentParent.style.display = ast.noneName
-            currentParent.className = ast.audioName
-            current.display = ast.noneName
-            sibling.style.opacity = ast.css.noneVal
-            siblingParent.className = `${ast.audioName} ${ast.blckName} ${ast.curtName}`
-            siblingParent.style.display = ast.blckName
+            currentParent.style.display = 'none'
+            current.display = 'none'
+            next.style.opacity = '0'
+            nextParent.className = 'audio_content block'
+            nextParent.style.display = 'block'
             viewText.innerHTML = name
             setTimeout(() => {
-                sibling.style.display = ast.blckName
-                sibling.style.left = SLIDE_LKEY
+                next.style.display = 'block'
+                next.style.left = SLIDE_LKEY
                 setTimeout(() => {
-                    sibling.style.opacity = ast.css.dispVal
-                    sibling.style.left = ast.css.nonePxVal
+                    next.style.opacity = '1'
+                    next.style.left = '0px'
                 }, 100)
             })
         }, 500)
     }
 
     /**
-     * @param {SyntheticEvent} e
+     * @param {*} e
+     * @return void 
      */
     playHandler(e) {
-        const audioList = document.querySelectorAll(ast.audioElm)
+        const audioList = document.querySelectorAll('audio')
         for (let i = 0; i < audioList.length; i++)
-            if (audioList[i] !== e.target)
+            if (audioList[i] !== e.target) {
                 this.operationUi({ target: audioList[i] }, true)
+                console.log('!if')
+            } else {
+                console.log('if')
+            }
     }
 
     /**
-     * @param {TouchEvent} e 
-     * @param {boolean} recession
+     * 
+     * @param {*} e 
+     * @return void
      */
+    endedHandler(e) {
+        console.log('ended = ' + e.target)
+        this.operationUi(e, true)
+    }
+
+    /**
+    * @param {TouchEvent} e 
+    * @param {boolean} recession
+    */
     operationUi(e, recession = null) {
         // Each declaration
         const parentId = e.target.className === ast.imgContent ? e.target.id : e.target.parentElement.id
@@ -159,6 +186,7 @@ export default class Main extends React.Component {
             parent.dataset.isCilcked = 0
             parent.dataset.isInitialized = 0
         }
+
 
         if (Responsive.isSupport()) {
             // It stop the music
@@ -201,6 +229,7 @@ export default class Main extends React.Component {
                 }, 100)
                 border.style.opacity = ast.css.dispVal
                 parent.style.transform = "scale(1.1, 1.1)"
+                console.log(`parent.style.transform = "scale(1.1, 1.1)"`)
 
                 parent.dataset.isCilcked = 1
             }
@@ -276,7 +305,7 @@ export default class Main extends React.Component {
                             <span className="content_name">{contentName}</span>
                         </div>
                     </main>
-                    <Auxiliary />
+                    {/* <Auxiliary /> */}
                 </div>
             )
         } else {
@@ -291,7 +320,8 @@ export default class Main extends React.Component {
                         animation: 'fadeOut',
                         stagger: 700,
                     }}>
-                    <Loding />
+                    Loding
+                    {/* <Loding /> */}
                 </VelocityTransitionGroup>
             )
         }
