@@ -265,7 +265,6 @@ export default class Main extends React.Component {
                     this.state[this.initData[i].audioName]
                 )
             })
-            // this.state = {}
             return (
                 <div>
                     <Header />
