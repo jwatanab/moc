@@ -26,7 +26,7 @@ router.post('/init', (req, res) => {
                 jsonAry.push({
                     audioName: docs[i].audioName,
                     imgName: docs[i].imgName,
-                    type: docs[i].type
+                    // type: docs[i].type
                 })
             }
             res.send(jsonAry)
